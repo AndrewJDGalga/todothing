@@ -23,7 +23,7 @@ function dbCreate(location:string) {
     
     db.exec(
         `create table if not exists user(
-            id          integer     primary key not null autoincrement,
+            id          integer     primary key not null,
             name        text        not null,
             password    text        not null,
             created     datetime    not null,
