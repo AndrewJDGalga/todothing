@@ -5,6 +5,7 @@ const app = express();
 const port = 8080;
 
 dbExistance();
+
 /*
 app.get('/', (_req:Request, res:Response) => {
     res.send('Test');
