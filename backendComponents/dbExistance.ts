@@ -33,3 +33,11 @@ function dbCreate(location:string) {
     
     db.close();
 }
+
+async function schemaCreate() {
+    try {
+        const text = await Deno.readTextFile('db/schema/todo.json');
+    }catch(e){
+        throw(e);
+    }
+}
