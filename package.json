@@ -1,0 +1,28 @@
+{
+  "name": "basic_todo",
+  "version": "1.0.0",
+  "description": "Simple TODO app for learning multiple aspects of web fullstack.",
+  "keywords": [
+    "todo",
+    "basic",
+    "vue",
+    "express",
+    "sqlite3",
+    "ts"
+  ],
+  "homepage": "https://github.com/AndrewJDGalga/TSNVESQLTodo#readme",
+  "bugs": {
+    "url": "https://github.com/AndrewJDGalga/TSNVESQLTodo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewJDGalga/TSNVESQLTodo.git"
+  },
+  "license": "MIT",
+  "author": "andrew j",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
