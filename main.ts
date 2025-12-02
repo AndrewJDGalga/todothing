@@ -1,10 +1,10 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 
 const app = express();
 const port = 8080;
 
-app.get('/', (req, res) => {
-    res.send("Test");
+app.get('/', (_req:Request, res:Response) => {
+    res.send('Test');
 });
 
 app.listen(port);
