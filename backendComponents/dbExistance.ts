@@ -19,8 +19,10 @@ export default async function dbExistance() {
 }
 
 function dbCreate(location:string) {
-    const db = new DatabaseSync(location);
-    
+    //const db = new DatabaseSync(location);
+
+    schemaCreate();
+    /*
     db.exec(
         `create table if not exists user(
             id          integer     primary key not null,
@@ -30,13 +32,17 @@ function dbCreate(location:string) {
             modified    datetime    not null
         );`
     );
+    */
     
-    db.close();
+    //db.close();
 }
 
 async function schemaCreate() {
+    console.log("generating schema");
     try {
-        const text = await Deno.readTextFile('db/schema/todo.json');
+        const raw = await Deno.readTextFile('db/schema/todo.json');
+        const json = JSON.parse(raw);
+        console.log(json);
     }catch(e){
         throw(e);
     }
