@@ -19,7 +19,10 @@ export default async function dbExistance() {
 }
 
 function dbCreate(location:string) {
-    schemaGenerateCommands('db/schema/todo.json').then(cmd=>dbSimpleCommand(cmd, location));
+    schemaGenerateCommands('db/schema/todo.json').then(cmd=>dbSimpleCommand(cmd, location)).catch(e=>{
+        console.error(e);
+        Deno.exit(1);
+    });
 }
 
 function dbSimpleCommand(cmd:string, location:string){
