@@ -19,33 +19,24 @@ export default async function dbExistance() {
 }
 
 function dbCreate(location:string) {
-    //const db = new DatabaseSync(location);
-
-    schemaCreate();
-    /*
-    db.exec(
-        `create table if not exists user(
-            id          integer     primary key not null,
-            name        text        not null,
-            password    text        not null,
-            created     datetime    not null,
-            modified    datetime    not null
-        );`
-    );
-    */
-    
-    //db.close();
+    schemaGenerateCommands('db/schema/todo.json').then(cmd=>dbSimpleCommand(cmd, location));
 }
 
-async function schemaCreate() {
-    console.log("generating schema");
+function dbSimpleCommand(cmd:string, location:string){
+    const db = new DatabaseSync(location);
+    db.exec(cmd);
+    db.close();
+}
+
+async function schemaGenerateCommands(schemaLocation:string) : Promise<string> {
+    let sql = '';
     try {
-        const raw = await Deno.readTextFile('db/schema/todo.json');
+        const raw = await Deno.readTextFile(schemaLocation);
         const schemaPrototype = JSON.parse(raw);
 
         for(const tableName in schemaPrototype) {
             const table = schemaPrototype[tableName];
-            let sql = `create table ${tableName} (`;
+            sql += `create table ${tableName} (`;
             const columns = [];
             let foreignKeys:Record<string,string> = {};
 
@@ -64,9 +55,9 @@ async function schemaCreate() {
 
             sql += columns.join();
             sql += ');\n';
-            console.log(sql);
         }
     }catch(e){
         throw(e);
     }
+    return sql;
 }
