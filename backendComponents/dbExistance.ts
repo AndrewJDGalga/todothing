@@ -41,8 +41,12 @@ async function schemaCreate() {
     console.log("generating schema");
     try {
         const raw = await Deno.readTextFile('db/schema/todo.json');
-        const json = JSON.parse(raw);
-        console.log(json);
+        const schemaPrototype = JSON.parse(raw);
+
+        for(const tableName in schemaPrototype) {
+            const table = schemaPrototype[tableName];
+            console.log(table);
+        }
     }catch(e){
         throw(e);
     }
