@@ -46,14 +46,22 @@ async function schemaCreate() {
         for(const tableName in schemaPrototype) {
             const table = schemaPrototype[tableName];
             let sql = `create table ${tableName} (`;
+            let foreignKeys = {};
 
             for(const col in table){
-                let foreignKeys = {};
                 if(col === 'foreign_key') {
                     foreignKeys = {...table[col]};
-                    console.log(foreignKeys);
+                    continue;
+                    //console.log(foreignKeys);
                 }
+                const colStructure = `${col} ${table[col]}`.replace(/,/, " ");
+                sql += `${colStructure}, `;
+                //sql += `${col} `
+                //console.log(`${col} ${table[col]}`.replace(/,/, " "));
             }
+            
+            sql = sql.slice(0, -2);
+            console.log(sql);
         }
     }catch(e){
         throw(e);
