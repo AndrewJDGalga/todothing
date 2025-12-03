@@ -46,22 +46,43 @@ async function schemaCreate() {
         for(const tableName in schemaPrototype) {
             const table = schemaPrototype[tableName];
             let sql = `create table ${tableName} (`;
+            const columns = [];
             let foreignKeys = {};
 
             for(const col in table){
                 if(col === 'foreign_key') {
                     foreignKeys = {...table[col]};
-                    continue;
-                    //console.log(foreignKeys);
+                } else {
+                    //const arr:Array<string> = table[col];
+                    //console.log((table[col] as Array<string>).slice(0).join(' '));
+                    if(!Array.isArray(table[col])) throw new Error('dbExistance.ts 58: Expect table[col] to be Array.');
+                    columns.push(`${col} ${(table[col] as Array<string>).slice(0).join(' ')}`.trim());
+                    //console.log(columns);
                 }
+                
+                /*
                 const colStructure = `${col} ${table[col]}`.replace(/,/, " ");
                 sql += `${colStructure}, `;
-                //sql += `${col} `
-                //console.log(`${col} ${table[col]}`.replace(/,/, " "));
+                */
             }
-            
-            sql = sql.slice(0, -2);
+
+            for(const col in foreignKeys){
+                columns.push(`foreign key (${col}) references ${foreignKeys[col]} (${col})`);
+            }
+
+            sql += columns.join();
             console.log(sql);
+
+            /*
+            sql = sql.slice(0, -2);
+            
+            for(const col in foreignKeys){
+                sql += ` foreign key (${foreignKeys[col]}) references ${col} (${foreignKeys[col]})`;
+            }
+
+            sql += 
+
+            */
         }
     }catch(e){
         throw(e);
