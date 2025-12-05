@@ -15,6 +15,15 @@
     const isFormValid = computed(()=>{
         return form.value.username.trim() && form.value.password.length > 8 &&  form.value.password === form.value.passwordConfirm;
     });
+
+    const resolveSubmit = async () => {
+        //TODO - err message
+        if(!isFormValid.value) return;
+        const success = await authState.register({name: form.value.username, password: form.value.password});
+        if(success){
+            router.push('/');
+        }
+    }
 </script>
 
 <template>

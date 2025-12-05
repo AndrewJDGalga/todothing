@@ -6,7 +6,7 @@ export const useAuthStore = defineStore('authState', ()=>{
     const isLoading = ref(false);
     const err = ref('');
 
-    const register = async (userData: { email: string; password: string; name: string}) => {
+    const register = async (userData: { password: string; name: string}) => {
         isLoading.value = true;
         err.value = '';
         let successful = true;
