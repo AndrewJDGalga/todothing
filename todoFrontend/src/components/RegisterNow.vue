@@ -4,6 +4,7 @@
 
 <template>
     <div>
+        <p>Don't have an account?</p>
         <RouterLink to="/register">Register Now</RouterLink>
     </div>
 </template>
@@ -14,6 +15,9 @@
         margin: 8px auto;
         display: flex;
         flex-direction: column;
+    }
+    p{
+        margin: 0;
     }
     a {
         color: black;

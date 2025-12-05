@@ -30,4 +30,7 @@ import RegisterNow from './RegisterNow.vue';
         display: flex;
         flex-direction: column;
     }
+    button {
+        margin-top: 16px;
+    }
 </style>

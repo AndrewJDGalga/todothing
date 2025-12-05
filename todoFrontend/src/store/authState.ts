@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('authState', ()=>{
             //TODO - replace
             await new Promise(r => setTimeout(() => {
                 r
-            }, 1000););
+            }, 1000));
             user.value = { ...userData, successDate: Date.now() };
         }catch(e){
             //TODO - actual error
