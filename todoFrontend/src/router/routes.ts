@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import Home from '../components/Home.vue';
 import Registration from '../components/Registration.vue';
 

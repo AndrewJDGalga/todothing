@@ -1,7 +1,10 @@
+<script setup lang="ts">
+    import { RouterLink } from 'vue-router';
+</script>
+
 <template>
     <div>
-        <label for="register">Don't have an account?</label>
-        <input id="register" type="button" value="Register Now"></input>
+        <RouterLink to="/register">Register Now</RouterLink>
     </div>
 </template>
 
