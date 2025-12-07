@@ -39,3 +39,4 @@ __screenshots__/
 *.od*
 env/
 examples/
+*.zip
