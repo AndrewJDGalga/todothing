@@ -7,7 +7,7 @@ function dbConnection() {
     let db = null;
     try {
         //better-SQLite3 will create db file if not present
-        db = new Database(location);
+        db = new Database(location, {verbose: console.log});
     }catch(e) {
         console.log(e);
         process.exit(1);
@@ -16,8 +16,8 @@ function dbConnection() {
 }
 
 function newUser(db, {name, password}){
-    const addUserStmt = db.prepare('insert into users (name, password) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
-    return addUserStmt.run([name, password]);
+    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    return addUserStmt.run(name, password);
 }
 
 function createUserTable(db){
@@ -40,6 +40,12 @@ function createUserTable(db){
     return res;
 }
 
+function getUser(id) {
+    const selection = db.prepare('select * from user');
+    return selection.all();
+}
+
 const db = dbConnection();
-console.log(createUserTable(db));
+//console.log(createUserTable(db));
 //console.log(newUser(db, {name: "test", password: "t3st"}));
+console.log(getUser(0));
