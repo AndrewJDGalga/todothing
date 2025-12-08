@@ -41,11 +41,11 @@ function createUserTable(db){
 }
 
 function getUser(id) {
-    const selection = db.prepare('select * from user');
-    return selection.all();
+    const selection = db.prepare('select * from user where id = ?');
+    return selection.all(id);
 }
 
 const db = dbConnection();
 //console.log(createUserTable(db));
 //console.log(newUser(db, {name: "test", password: "t3st"}));
-console.log(getUser(0));
+console.log(getUser(1));
