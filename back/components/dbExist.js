@@ -1,10 +1,9 @@
-import { access, constants } from 'node:fs';
-import { DatabaseSync } from 'node:sqlite';
+import Database from "better-sqlite3";
 
-export default async function dbExist() {
-    const location = 'db/todo.db';
+export default function dbExist() {
+    const location = '../db/todo.db';
     
-    const db = new DatabaseSync(location);
+    const db = new Database(location);
 
 }
 dbExist();
