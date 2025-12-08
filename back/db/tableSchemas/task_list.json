@@ -1,0 +1,28 @@
+{
+    "id" : [
+        "integer",
+        "primary key"
+    ],
+    "name" : [
+        "text",
+        "not null"
+    ],
+    "step_list" : [
+        "integer"
+    ],
+    "due_date" : [
+        "datetime"
+    ],
+    "repeat_when":[
+        "integer"
+    ],
+    "location":[
+        "text"
+    ],
+    "notes":[
+        "text"
+    ],
+    "foreign_key" : {
+        "step_list" : "id"
+    }
+}

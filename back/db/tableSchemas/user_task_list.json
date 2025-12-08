@@ -1,0 +1,18 @@
+{
+    "id" : [
+        "integer",
+        "primary key"
+    ],
+    "user":[
+        "integer",
+        "not null"
+    ],
+    "task_list":[
+        "integer",
+        "not null"
+    ],
+    "foreign_key":{
+        "user":"id",
+        "task_list":"id"
+    }
+}

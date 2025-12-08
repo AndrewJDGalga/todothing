@@ -40,6 +40,10 @@ function createUserTable(db){
     return res;
 }
 
+function createTable(db, schema) {
+    
+}
+
 function getUser(id) {
     const selection = db.prepare('select * from user where id = ?');
     return selection.all(id);

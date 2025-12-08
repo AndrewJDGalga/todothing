@@ -1,0 +1,9 @@
+{
+    "id" : [
+        "integer",
+        "primary key"
+    ],
+    "step" : [
+        "text"
+    ]
+}
