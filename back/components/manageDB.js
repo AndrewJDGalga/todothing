@@ -1,5 +1,7 @@
 import Database from "better-sqlite3";
 
+////TODODODODODODO replace all the error handling
+
 function dbConnection() {
     const location = '../db/todo.db';
     let db = null;
@@ -18,5 +20,26 @@ function newUser(db, {name, password}){
     return addUserStmt.run([name, password]);
 }
 
+function createUserTable(db){
+    let res = null;
+    try {
+        const createUserTable = db.prepare(`
+            create table user (
+                id integer primary key autoincrement,
+                name text not null,
+                password text not null,
+                creation datetime not null,
+                modification datetime not null
+            )`
+        );
+        res = createUserTable.run();
+    }catch(e) {
+        console.log(e);
+        process.exit(1);
+    }
+    return res;
+}
+
 const db = dbConnection();
-console.log(newUser(db, {name: "test", password: "t3st"}));
+console.log(createUserTable(db));
+//console.log(newUser(db, {name: "test", password: "t3st"}));
