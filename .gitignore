@@ -37,6 +37,7 @@ __screenshots__/
 
 #local
 *.od*
+*.db
 env/
 examples/
 front-prod/
