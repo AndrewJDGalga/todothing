@@ -2,6 +2,22 @@ import Database from "better-sqlite3";
 
 ////TODODODODODODO replace all the error handling
 
+/*
+class sqliteDB {
+    #dbConnection;
+    constructor(location){
+        this.location = location;
+        this.#dbConnection = null;
+    }
+
+    #newDBConnection(){
+        try {
+            #dbConnection = new Database(location, {verbose: console.log});
+        }
+    }
+}
+    */
+
 function dbConnection() {
     const location = '../db/todo.db';
     let db = null;
@@ -49,7 +65,10 @@ function getUser(id) {
     return selection.all(id);
 }
 
-const db = dbConnection();
+let db = dbConnection();
 //console.log(createUserTable(db));
 //console.log(newUser(db, {name: "test", password: "t3st"}));
-console.log(getUser(1));
+console.log(db.close());
+db = null;
+db = dbConnection();
+console.log(db.close());
