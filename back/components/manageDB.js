@@ -2,12 +2,12 @@ import Database from "better-sqlite3";
 
 ////TODODODODODODO replace all the error handling
 
-
-class SqliteDB {
+/*
+class SqliteDBConn {
     #dbConnection;
 
-    constructor(location){
-        this.location = location;
+    constructor(){
+        this.location = '../db/todo.db';
         this.#clearConnection();
     }
 
@@ -22,6 +22,33 @@ class SqliteDB {
             console.log(e);
             process.exit(1);
         }
+    }
+}
+*/
+
+function SqliteDBTask(command, data){
+    let res = {};
+    try{
+        const db = new Database('../db/todo.db', {verbose: console.log});
+        const stmt = db.prepare(command);
+        let res = stmt
+        db.close();
+    } catch(e) {
+        console.log(e);
+        process.exit(1);
+    }
+    return res;
+}
+
+class BaseTable {
+    constructor(schemaLocation){
+        this.schema = schemaLocation;
+    }
+}
+
+class UserTable extends BaseTable {
+    constructor(){
+        this.super('../db/tableSchemas/user.json');
     }
     addUser({name, password}){
         this.#newDBConnection();
@@ -106,9 +133,9 @@ function getUser(id) {
 }
 */
 
-const db = new SqliteDB('../db/todo.db');
+//const db = new SqliteDB();
 //console.log(db.addUser({name: 'test1', password: "t3st"}));
-console.log(db.getUser({name:'test1'}));
+//console.log(db.getUser({name:'test1'}));
 
 //let db = dbConnection();
 //console.log(createUserTable(db));
