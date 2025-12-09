@@ -1,5 +1,8 @@
 import Database from "better-sqlite3";
+import {readFile} from "node:fs/promises";
 
+//I want to know when I last did something, getting distracted. --TODO remove
+console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////TODODODODODODO replace all the error handling
 
 /*
@@ -98,9 +101,19 @@ function dbConnection(location) {
     }
     return db;
 }
-function createTable(db, schema) {
-    
+
+//db
+function createTable(schemaLocation) {
+    readFile(schemaLocation, (e, data)=>{
+        if(e) {
+            console.err(e);
+            process.exit(1);
+        }
+
+        console.log("JSON: ", JSON.parse(data));
+    });
 }
+createTable('../tableSchemas/step_list.json');
 
 //USER TABLE
 function createUserTable(db){
