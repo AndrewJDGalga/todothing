@@ -25,7 +25,7 @@ class SqliteDBConn {
     }
 }
 */
-
+/*
 function SqliteDBTask(command, data){
     let res = {};
     try{
@@ -82,10 +82,12 @@ class UserTable extends BaseTable {
         return res;
     }
 }
-    
-/*
-function dbConnection() {
-    const location = '../db/todo.db';
+*/
+
+//DATABASE
+const location = '../db/todo.db';
+
+function dbConnection(location) {
     let db = null;
     try {
         //better-SQLite3 will create db file if not present
@@ -95,14 +97,12 @@ function dbConnection() {
         process.exit(1);
     }
     return db;
-}*/
-
-/*
-function newUser(db, {name, password}){
-    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
-    return addUserStmt.run(name, password);
+}
+function createTable(db, schema) {
+    
 }
 
+//USER TABLE
 function createUserTable(db){
     let res = null;
     try {
@@ -122,16 +122,21 @@ function createUserTable(db){
     }
     return res;
 }
-
-function createTable(db, schema) {
-    
+function newUser(db, {name, password}){
+    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    return addUserStmt.run(name, password);
 }
 
-function getUser(id) {
-    const selection = db.prepare('select * from user where id = ?');
-    return selection.all(id);
+function getUserByID(db, id){
+    const findUserStmt = db.prepare('select * from user where id = ?');
+    const res = findUserStmt.all(id);
+    return res;
 }
-*/
+function getUserByName(db, name){
+    const findUserStmt = db.prepare('select * from user where name = ?');
+    const res = findUserStmt.all(name);
+    return res;
+}
 
 //const db = new SqliteDB();
 //console.log(db.addUser({name: 'test1', password: "t3st"}));
