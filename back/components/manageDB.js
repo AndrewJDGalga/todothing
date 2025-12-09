@@ -2,22 +2,61 @@ import Database from "better-sqlite3";
 
 ////TODODODODODODO replace all the error handling
 
-/*
-class sqliteDB {
+
+class SqliteDB {
     #dbConnection;
+
     constructor(location){
         this.location = location;
+        this.#clearConnection();
+    }
+
+    #clearConnection(){
+        if(this.#dbConnection) this.#dbConnection.close();
         this.#dbConnection = null;
     }
-
     #newDBConnection(){
         try {
-            #dbConnection = new Database(location, {verbose: console.log});
+            this.#dbConnection = new Database(this.location, {verbose: console.log});
+        } catch(e) {
+            console.log(e);
+            process.exit(1);
         }
     }
+    addUser({name, password}){
+        this.#newDBConnection();
+        const addUserStmt = this.#dbConnection.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+        const res = addUserStmt.run(name, password);
+        this.#clearConnection();
+        return res;
+    }
+    //never, ever return password
+    getUser({id = null, name = null}){
+        let res = {};
+        if(id !== null) {
+            res = this.#getUserByID(id);
+        }else if(name !== null){
+            res = this.#getUserByName(name);
+        }
+        return res;
+    }
+    #getUserByID(id){
+        this.#newDBConnection();
+        const findUserStmt = this.#dbConnection.prepare('select * from user where id = ?');
+        const res = findUserStmt.run(id);
+        this.#clearConnection();
+        return res;
+    }
+    #getUserByName(name){
+        this.#newDBConnection();
+        const findUserStmt = this.#dbConnection.prepare('select * from user where name = ?');
+        const res = findUserStmt.run(name);
+        this.#clearConnection();
+        return res;
+    }
 }
-    */
-
+    
+/*
 function dbConnection() {
     const location = '../db/todo.db';
     let db = null;
@@ -29,8 +68,9 @@ function dbConnection() {
         process.exit(1);
     }
     return db;
-}
+}*/
 
+/*
 function newUser(db, {name, password}){
     const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     return addUserStmt.run(name, password);
@@ -64,11 +104,18 @@ function getUser(id) {
     const selection = db.prepare('select * from user where id = ?');
     return selection.all(id);
 }
+*/
 
-let db = dbConnection();
+const db = new SqliteDB('../db/todo.db');
+console.log(db.addUser({name: 'test1', password: "t3st"}));
+console.log(db.getUser({id:1}));
+
+//let db = dbConnection();
 //console.log(createUserTable(db));
 //console.log(newUser(db, {name: "test", password: "t3st"}));
+/*
 console.log(db.close());
 db = null;
 db = dbConnection();
 console.log(db.close());
+*/
