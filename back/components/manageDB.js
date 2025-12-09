@@ -43,14 +43,14 @@ class SqliteDB {
     #getUserByID(id){
         this.#newDBConnection();
         const findUserStmt = this.#dbConnection.prepare('select * from user where id = ?');
-        const res = findUserStmt.run(id);
+        const res = findUserStmt.all(id);
         this.#clearConnection();
         return res;
     }
     #getUserByName(name){
         this.#newDBConnection();
         const findUserStmt = this.#dbConnection.prepare('select * from user where name = ?');
-        const res = findUserStmt.run(name);
+        const res = findUserStmt.all(name);
         this.#clearConnection();
         return res;
     }
@@ -107,8 +107,8 @@ function getUser(id) {
 */
 
 const db = new SqliteDB('../db/todo.db');
-console.log(db.addUser({name: 'test1', password: "t3st"}));
-console.log(db.getUser({id:1}));
+//console.log(db.addUser({name: 'test1', password: "t3st"}));
+console.log(db.getUser({name:'test1'}));
 
 //let db = dbConnection();
 //console.log(createUserTable(db));
