@@ -1,4 +1,5 @@
 {
+    "name" : "step_list",
     "id" : [
         "integer",
         "primary key"

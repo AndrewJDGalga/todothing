@@ -115,7 +115,7 @@ function createStepListTable(db, schemaLocation){
         db.exec(command);
     });
 }
-createStepListTable(dbConnection(location), '../tableSchemas/step_list.json');
+//createStepListTable(dbConnection(location), '../tableSchemas/step_list.json');
 
 //USER TABLE
 function createUserTable(db){
