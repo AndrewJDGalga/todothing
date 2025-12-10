@@ -1,5 +1,5 @@
 {
-    "name" : "step_list",
+    "table_name" : "step_list",
     "id" : [
         "integer",
         "primary key"

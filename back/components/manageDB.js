@@ -115,6 +115,25 @@ function createStepListTable(db, schemaLocation){
         db.exec(command);
     });
 }
+function createUserTable(db, schemaLocation){
+    readFile(schemaLocation, (e, data)=>{
+        if(e) {
+            console.err(e);
+            process.exit(1);
+        }
+        const decoded = JSON.parse(data);
+        const keys = Object.keys(decoded);
+        const command = `
+            create table ${decoded.table_name} (
+                ${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, 
+                ${keys[2]} ${decoded.name[0]} ${decoded.name[1]},
+                ${keys[3]} ${decoded.password[0]} ${decoded.password[1]},
+                ${keys[4]} ${decoded.creation[0]} ${decoded.creation[1]},
+                ${keys[5]} ${decoded.modification[0]} ${decoded.modification[1]}
+            )`;
+        db.exec(command);
+    });
+}
 //createStepListTable(dbConnection(location), '../tableSchemas/step_list.json');
 
 //USER TABLE

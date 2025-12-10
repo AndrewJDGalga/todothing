@@ -1,4 +1,5 @@
 {
+    "table_name" : "user",
     "id" : [
         "integer",
         "primary key"
