@@ -103,17 +103,7 @@ function dbConnection(location) {
 }
 
 //db
-function createTable(schemaLocation) {
-    readFile(schemaLocation, (e, data)=>{
-        if(e) {
-            console.err(e);
-            process.exit(1);
-        }
-
-        console.log("command:\n", schemaFromJson(JSON.parse(data)));
-    });
-}
-function createStepListTable(schemaLocation){
+function createStepListTable(db, schemaLocation){
     readFile(schemaLocation, (e, data)=>{
         if(e) {
             console.err(e);
@@ -121,40 +111,11 @@ function createStepListTable(schemaLocation){
         }
         const decoded = JSON.parse(data);
         const keys = Object.keys(decoded);
-        const stmt = `create table ${decoded.name} (${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, ${keys[2]} ${decoded.id[0]})`;
-        console.log(stmt);
+        const command = `create table ${decoded.name} (${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, ${keys[2]} ${decoded.id[0]})`;
+        db.exec(command);
     });
 }
-function schemaFromJson(json){
-    let sql = '';
-    
-    for(const tableName in json){
-        const table = json[tableName];
-        sql += `create table ${tableName} (`;
-        const columns = [];
-        let foreignKeys = {};
-
-        for(const col in table){
-            if(col === 'foreign_key') {
-                foreignKeys = {...table[col]};
-            } else {
-                if(!Array.isArray(table[col])) throw new Error('dbExistance.ts 58: Expect table[col] to be Array.');
-
-                columns.push(`${col} ${table[col].slice(0).join(' ')}`.trim());
-            }
-        }
-
-        for(const col in foreignKeys){
-            columns.push(`foreign key (${col}) references ${foreignKeys[col]} (${col})`);
-        }
-
-        sql += columns.join();
-        sql += ');\n';
-    }
-
-    return sql;
-}
-createStepListTable('../tableSchemas/step_list.json');
+createStepListTable(dbConnection(location), '../tableSchemas/step_list.json');
 
 //USER TABLE
 function createUserTable(db){
