@@ -111,7 +111,11 @@ function createStepListTable(db, schemaLocation){
         }
         const decoded = JSON.parse(data);
         const keys = Object.keys(decoded);
-        const command = `create table ${decoded.name} (${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, ${keys[2]} ${decoded.id[0]})`;
+        const command = `
+            create table if not exists ${decoded.name} (
+                ${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, 
+                ${keys[2]} ${decoded.step[0]}
+            )`;
         db.exec(command);
     });
 }
@@ -124,7 +128,7 @@ function createUserTable(db, schemaLocation){
         const decoded = JSON.parse(data);
         const keys = Object.keys(decoded);
         const command = `
-            create table ${decoded.table_name} (
+            create table if not exists ${decoded.table_name} (
                 ${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, 
                 ${keys[2]} ${decoded.name[0]} ${decoded.name[1]},
                 ${keys[3]} ${decoded.password[0]} ${decoded.password[1]},
@@ -134,28 +138,34 @@ function createUserTable(db, schemaLocation){
         db.exec(command);
     });
 }
-//createStepListTable(dbConnection(location), '../tableSchemas/step_list.json');
-
-//USER TABLE
-function createUserTable(db){
-    let res = null;
-    try {
-        const createUserTable = db.prepare(`
-            create table user (
-                id integer primary key autoincrement,
-                name text not null,
-                password text not null,
-                creation datetime not null,
-                modification datetime not null
-            )`
-        );
-        res = createUserTable.run();
-    }catch(e) {
-        console.log(e);
-        process.exit(1);
-    }
-    return res;
+function createTaskListTable(schemaLocation){
+    readFile(schemaLocation, (e, data)=>{
+        if(e) {
+            console.error(e);
+            process.exit(1);
+        }
+        const decoded = JSON.parse(data);
+        const keys = Object.keys(decoded);
+        const foriegn_key = Object.keys(decoded.foreign_key);
+        const command = `
+            create table if not exists ${decoded.table_name} (
+                ${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, 
+                ${keys[2]} ${decoded.name[0]} ${decoded.name[1]},
+                ${keys[3]} ${decoded.step_list_id[0]},
+                ${keys[4]} ${decoded.due_date[0]},
+                ${keys[5]} ${decoded.repeat_when[0]},
+                ${keys[6]} ${decoded.location[0]},
+                ${keys[7]} ${decoded.notes[0]},
+                ${keys[8]} ${decoded.created[0]},
+                foriegn key (${keys[3]}) references ${foriegn_key[0]} (${decoded.foreign_key.step_list})
+            )`;
+        console.log(command);
+        //db.exec(command);
+    });
 }
+//dbConnection(location), 
+createTaskListTable('../tableSchemas/task_list.json');
+
 function newUser(db, {name, password}){
     const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     return addUserStmt.run(name, password);
