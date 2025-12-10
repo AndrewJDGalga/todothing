@@ -167,7 +167,7 @@ function createTaskListTable(db, schemaLocation){
 }
 
 const db = dbConnection(location);
-//createStepListTable(db, '../tableSchemas/step_list.json');
+createStepListTable(db, '../tableSchemas/step_list.json');
 createTaskListTable(db, '../tableSchemas/task_list.json');
 
 function newUser(db, {name, password}){
