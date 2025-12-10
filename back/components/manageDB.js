@@ -113,6 +113,18 @@ function createTable(schemaLocation) {
         console.log("command:\n", schemaFromJson(JSON.parse(data)));
     });
 }
+function createStepListTable(schemaLocation){
+    readFile(schemaLocation, (e, data)=>{
+        if(e) {
+            console.err(e);
+            process.exit(1);
+        }
+        const decoded = JSON.parse(data);
+        const keys = Object.keys(decoded);
+        const stmt = `create table ${decoded.name} (${keys[1]} ${decoded.id[0]} ${decoded.id[1]}, ${keys[2]} ${decoded.id[0]})`;
+        console.log(stmt);
+    });
+}
 function schemaFromJson(json){
     let sql = '';
     
@@ -142,7 +154,7 @@ function schemaFromJson(json){
 
     return sql;
 }
-createTable('../tableSchemas/step_list.json');
+createStepListTable('../tableSchemas/step_list.json');
 
 //USER TABLE
 function createUserTable(db){
