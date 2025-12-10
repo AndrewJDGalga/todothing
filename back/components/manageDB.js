@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import {readFile} from "node:fs/promises";
+import {readFile} from "node:fs";
 
 //I want to know when I last did something, getting distracted. --TODO remove
 console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
@@ -110,8 +110,37 @@ function createTable(schemaLocation) {
             process.exit(1);
         }
 
-        console.log("JSON: ", JSON.parse(data));
+        console.log("command:\n", schemaFromJson(JSON.parse(data)));
     });
+}
+function schemaFromJson(json){
+    let sql = '';
+    
+    for(const tableName in json){
+        const table = json[tableName];
+        sql += `create table ${tableName} (`;
+        const columns = [];
+        let foreignKeys = {};
+
+        for(const col in table){
+            if(col === 'foreign_key') {
+                foreignKeys = {...table[col]};
+            } else {
+                if(!Array.isArray(table[col])) throw new Error('dbExistance.ts 58: Expect table[col] to be Array.');
+
+                columns.push(`${col} ${table[col].slice(0).join(' ')}`.trim());
+            }
+        }
+
+        for(const col in foreignKeys){
+            columns.push(`foreign key (${col}) references ${foreignKeys[col]} (${col})`);
+        }
+
+        sql += columns.join();
+        sql += ');\n';
+    }
+
+    return sql;
 }
 createTable('../tableSchemas/step_list.json');
 
