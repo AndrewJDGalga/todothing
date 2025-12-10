@@ -1,4 +1,5 @@
 {
+    "table_name" : "task_list",
     "id" : [
         "integer",
         "primary key"
@@ -7,7 +8,7 @@
         "text",
         "not null"
     ],
-    "step_list" : [
+    "step_list_id" : [
         "integer"
     ],
     "due_date" : [
@@ -21,6 +22,9 @@
     ],
     "notes":[
         "text"
+    ],
+    "created":[
+        "datetime"
     ],
     "foreign_key" : {
         "step_list" : "id"
