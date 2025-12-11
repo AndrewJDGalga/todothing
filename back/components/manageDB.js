@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import {readFile} from "node:fs";
+import {readFile, readFileSync} from "node:fs";
 
 //I want to know when I last did something, getting distracted. --TODO remove
 console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
@@ -17,6 +17,11 @@ function dbConnection(location) {
         process.exit(1);
     }
     return db;
+}
+//intentionally unsafe
+function runRawSQL(db, scriptFilePath) {
+    const rawCmd = readFileSync(scriptFilePath, 'utf8');
+    db.exec(rawCmd);
 }
 
 //USER
@@ -135,7 +140,11 @@ function createUserTaskListTable(db, schemaLocation){
     });
 }
 
+
+
 const db = dbConnection(location);
+//unclear from docs if error?
+console.log(runRawSQL(db, '../sqlScripts/step_list_table.sql'));
 //createStepListTable(db, '../tableSchemas/step_list.json');
 //createUserTable(db, '../tableSchemas/user.json');
 //createTaskListTable(db, '../tableSchemas/task_list.json');
@@ -144,6 +153,6 @@ const db = dbConnection(location);
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByID(db, 1));
-console.log(removeUser(db, 1));
+//console.log(removeUser(db, 1));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByID(db, 1));
