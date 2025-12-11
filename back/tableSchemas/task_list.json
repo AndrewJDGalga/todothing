@@ -1,9 +1,5 @@
 {
     "table_name" : "task_list",
-    "id" : [
-        "integer",
-        "primary key"
-    ],
     "name" : [
         "text",
         "not null"
@@ -27,6 +23,6 @@
         "datetime"
     ],
     "foreign_key" : {
-        "step_list" : "id"
+        "step_list" : "rowid"
     }
 }

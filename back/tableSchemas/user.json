@@ -2,7 +2,8 @@
     "table_name" : "user",
     "id" : [
         "integer",
-        "primary key"
+        "primary key",
+        "autoincrement"
     ],
     "name" : [
         "text",

@@ -1,18 +1,15 @@
 {
-    "id" : [
-        "integer",
-        "primary key"
-    ],
-    "user":[
+    "table_name" : "user_task_list",
+    "user_id":[
         "integer",
         "not null"
     ],
-    "task_list":[
+    "task_list_id":[
         "integer",
         "not null"
     ],
     "foreign_key":{
         "user":"id",
-        "task_list":"id"
+        "task_list":"rowid"
     }
 }
