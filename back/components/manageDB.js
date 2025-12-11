@@ -100,7 +100,7 @@ function createTaskListTable(db, schemaLocation){
                 ${keys[5]} ${decoded.location[0]},
                 ${keys[6]} ${decoded.notes[0]},
                 ${keys[7]} ${decoded.created[0]},
-                foreign key (${keys[3]}) references ${foriegn_key[0]} (${decoded.foreign_key.step_list}) 
+                foreign key (${keys[2]}) references ${foriegn_key[0]} (${decoded.foreign_key.step_list}) 
                     on update cascade 
                     on delete cascade
             )`;
@@ -141,5 +141,9 @@ const db = dbConnection(location);
 //createTaskListTable(db, '../tableSchemas/task_list.json');
 //createUserTaskListTable(db, '../tableSchemas/user_task_list.json');
 
-console.log(addUser(db, {name: 'test', password: 't35t'}));
-console.log(getUserByName(db, 'test'));
+//console.log(addUser(db, {name: 'test', password: 't35t'}));
+//console.log(getUserByName(db, 'test'));
+//console.log(getUserByID(db, 1));
+console.log(removeUser(db, 1));
+//console.log(getUserByName(db, 'test'));
+//console.log(getUserByID(db, 1));
