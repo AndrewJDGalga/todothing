@@ -40,11 +40,13 @@ function createUserTable(db, schemaLocation){
         db.exec(command);
     });
 }
-function newUser(db, {name, password}){
+function addUser(db, {name, password}){
     const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     return addUserStmt.run(name, password);
 }
+function removeUser(db, id) {
 
+}
 function getUserByID(db, id){
     const findUserStmt = db.prepare('select * from user where id = ?');
     const res = findUserStmt.all(id);
@@ -54,6 +56,9 @@ function getUserByName(db, name){
     const findUserStmt = db.prepare('select * from user where name = ?');
     const res = findUserStmt.all(name);
     return res;
+}
+function confirmUser(db, { providedName, providedPassword}){
+    
 }
 
 //STEP_LIST
