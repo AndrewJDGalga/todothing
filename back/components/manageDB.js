@@ -5,91 +5,8 @@ import {readFile} from "node:fs";
 console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////TODODODODODODO replace all the error handling
 
-/*
-class SqliteDBConn {
-    #dbConnection;
-
-    constructor(){
-        this.location = '../db/todo.db';
-        this.#clearConnection();
-    }
-
-    #clearConnection(){
-        if(this.#dbConnection) this.#dbConnection.close();
-        this.#dbConnection = null;
-    }
-    #newDBConnection(){
-        try {
-            this.#dbConnection = new Database(this.location, {verbose: console.log});
-        } catch(e) {
-            console.log(e);
-            process.exit(1);
-        }
-    }
-}
-*/
-/*
-function SqliteDBTask(command, data){
-    let res = {};
-    try{
-        const db = new Database('../db/todo.db', {verbose: console.log});
-        const stmt = db.prepare(command);
-        let res = stmt
-        db.close();
-    } catch(e) {
-        console.log(e);
-        process.exit(1);
-    }
-    return res;
-}
-
-class BaseTable {
-    constructor(schemaLocation){
-        this.schema = schemaLocation;
-    }
-}
-
-class UserTable extends BaseTable {
-    constructor(){
-        this.super('../db/tableSchemas/user.json');
-    }
-    addUser({name, password}){
-        this.#newDBConnection();
-        const addUserStmt = this.#dbConnection.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
-        const res = addUserStmt.run(name, password);
-        this.#clearConnection();
-        return res;
-    }
-    //never, ever return password
-    getUser({id = null, name = null}){
-        let res = {};
-        if(id !== null) {
-            res = this.#getUserByID(id);
-        }else if(name !== null){
-            res = this.#getUserByName(name);
-        }
-        return res;
-    }
-    #getUserByID(id){
-        this.#newDBConnection();
-        const findUserStmt = this.#dbConnection.prepare('select * from user where id = ?');
-        const res = findUserStmt.all(id);
-        this.#clearConnection();
-        return res;
-    }
-    #getUserByName(name){
-        this.#newDBConnection();
-        const findUserStmt = this.#dbConnection.prepare('select * from user where name = ?');
-        const res = findUserStmt.all(name);
-        this.#clearConnection();
-        return res;
-    }
-}
-*/
-
 //DATABASE
 const location = '../db/todo.db';
-
 function dbConnection(location) {
     let db = null;
     try {
@@ -102,23 +19,7 @@ function dbConnection(location) {
     return db;
 }
 
-//db
-function createStepListTable(db, schemaLocation){
-    readFile(schemaLocation, (e, data)=>{
-        if(e) {
-            console.err(e);
-            process.exit(1);
-        }
-        const decoded = JSON.parse(data);
-        const keys = Object.keys(decoded);
-        const command = `
-            create table if not exists ${decoded.table_name} (
-                ${keys[1]} ${decoded.step[0]}
-            )`;
-        console.log(command);
-        //db.exec(command);
-    });
-}
+//USER
 function createUserTable(db, schemaLocation){
     readFile(schemaLocation, (e, data)=>{
         if(e) {
@@ -136,9 +37,44 @@ function createUserTable(db, schemaLocation){
                 ${keys[5]} ${decoded.modification[0]} ${decoded.modification[1]}
             )`;
         console.log(command);
-        //db.exec(command);
+        db.exec(command);
     });
 }
+function newUser(db, {name, password}){
+    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    return addUserStmt.run(name, password);
+}
+
+function getUserByID(db, id){
+    const findUserStmt = db.prepare('select * from user where id = ?');
+    const res = findUserStmt.all(id);
+    return res;
+}
+function getUserByName(db, name){
+    const findUserStmt = db.prepare('select * from user where name = ?');
+    const res = findUserStmt.all(name);
+    return res;
+}
+
+//STEP_LIST
+function createStepListTable(db, schemaLocation){
+    readFile(schemaLocation, (e, data)=>{
+        if(e) {
+            console.err(e);
+            process.exit(1);
+        }
+        const decoded = JSON.parse(data);
+        const keys = Object.keys(decoded);
+        const command = `
+            create table if not exists ${decoded.table_name} (
+                ${keys[1]} ${decoded.step[0]}
+            )`;
+        console.log(command);
+        db.exec(command);
+    });
+}
+
+//TASK_LIST
 function createTaskListTable(db, schemaLocation){
     readFile(schemaLocation, (e, data)=>{
         if(e) {
@@ -162,9 +98,11 @@ function createTaskListTable(db, schemaLocation){
                     on delete cascade
             )`;
         console.log(command);
-        //db.exec(command);
+        db.exec(command);
     });
 }
+
+//USER_TASK_LIST
 function createUserTaskListTable(db, schemaLocation){
     readFile(schemaLocation, (e, data)=>{
         if(e) {
@@ -186,42 +124,13 @@ function createUserTaskListTable(db, schemaLocation){
                     on delete cascade
             )`;
         console.log(command);
-        //db.exec(command);
+        db.exec(command);
     });
 }
 
 const db = dbConnection(location);
-createStepListTable(db, '../tableSchemas/step_list.json');
-createUserTable(db, '../tableSchemas/user.json');
-createTaskListTable(db, '../tableSchemas/task_list.json');
-createUserTaskListTable(db, '../tableSchemas/user_task_list.json');
+//createStepListTable(db, '../tableSchemas/step_list.json');
+//createUserTable(db, '../tableSchemas/user.json');
+//createTaskListTable(db, '../tableSchemas/task_list.json');
+//createUserTaskListTable(db, '../tableSchemas/user_task_list.json');
 
-function newUser(db, {name, password}){
-    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
-    return addUserStmt.run(name, password);
-}
-
-function getUserByID(db, id){
-    const findUserStmt = db.prepare('select * from user where id = ?');
-    const res = findUserStmt.all(id);
-    return res;
-}
-function getUserByName(db, name){
-    const findUserStmt = db.prepare('select * from user where name = ?');
-    const res = findUserStmt.all(name);
-    return res;
-}
-
-//const db = new SqliteDB();
-//console.log(db.addUser({name: 'test1', password: "t3st"}));
-//console.log(db.getUser({name:'test1'}));
-
-//let db = dbConnection();
-//console.log(createUserTable(db));
-//console.log(newUser(db, {name: "test", password: "t3st"}));
-/*
-console.log(db.close());
-db = null;
-db = dbConnection();
-console.log(db.close());
-*/
