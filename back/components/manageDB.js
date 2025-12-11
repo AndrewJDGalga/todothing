@@ -45,7 +45,8 @@ function addUser(db, {name, password}){
     return addUserStmt.run(name, password);
 }
 function removeUser(db, id) {
-
+    const removeUserStmt = db.prepare('delete from user where id = ?');
+    return removeUserStmt.run(id);
 }
 function getUserByID(db, id){
     const findUserStmt = db.prepare('select * from user where id = ?');
@@ -57,8 +58,9 @@ function getUserByName(db, name){
     const res = findUserStmt.all(name);
     return res;
 }
-function confirmUser(db, { providedName, providedPassword}){
-    
+function confirmUser(db, {providedName, providedPassword}){
+    const result = getUserByName(db, providedName);
+
 }
 
 //STEP_LIST
@@ -139,3 +141,5 @@ const db = dbConnection(location);
 //createTaskListTable(db, '../tableSchemas/task_list.json');
 //createUserTaskListTable(db, '../tableSchemas/user_task_list.json');
 
+console.log(addUser(db, {name: 'test', password: 't35t'}));
+console.log(getUserByName(db, 'test'));
