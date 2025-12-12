@@ -6,9 +6,13 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 ////---------------TODODODODODODO replace all the error handling
 
+export { dbConnection, runRawSQL, addUser };
+
+
+
 //DATABASE
-const location = '../db/todo.db';
-function dbConnection(location) {
+function dbConnection() {
+    const location = './db/todo.db';
     let db = null;
     try {
         //better-SQLite3 will create db file if not present
@@ -83,7 +87,7 @@ function changeUserPassword(db, id, password){
 
 
 //TEST
-const db = dbConnection(location);
+//const db = dbConnection(location);
 /*
 console.log(runRawSQL(db, '../sqlScripts/step_list_table.sql'));
 console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
@@ -97,4 +101,4 @@ console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByID(db, 1));
 
-db.close();
+//db.close();
