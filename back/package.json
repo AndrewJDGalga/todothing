@@ -7,7 +7,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests/"
+    "test": "mocha ./tests/",
+    "resetDB" : "rm ./db/todo.db",
+    "cleanTest" : "npm run resetDB && npm run test"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

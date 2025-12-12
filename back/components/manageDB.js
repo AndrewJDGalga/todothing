@@ -8,8 +8,6 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 export { dbConnection, runRawSQL, addUser };
 
-
-
 //DATABASE
 function dbConnection() {
     const location = './db/todo.db';
@@ -87,7 +85,7 @@ function changeUserPassword(db, id, password){
 
 
 //TEST
-//const db = dbConnection(location);
+//const db = dbConnection();
 /*
 console.log(runRawSQL(db, '../sqlScripts/step_list_table.sql'));
 console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
@@ -95,7 +93,7 @@ console.log(runRawSQL(db, '../sqlScripts/task_list_table.sql'));
 console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
 */
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
-
+//console.log
 //console.log(removeUser(db, 3));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByName(db, 'test'));
