@@ -59,7 +59,7 @@ function confirmUser(db, providedName){
     const result = getUserByName(db, providedName);
     let valid = false;
 
-    if(result.length > 0 && providedName === result.name){
+    if(result.length > 0 && providedName === result[0].name){
         valid = true
     }
 
@@ -87,6 +87,7 @@ console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
 console.log(confirmUser(db, 'test'));
 console.log(confirmUser(db, ' '));
+
 //console.log(removeUser(db, 3));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByName(db, 'test'));
