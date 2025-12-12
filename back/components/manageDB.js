@@ -34,7 +34,7 @@ function addUser(db, {name, password}){
         res = addUserStmt.run(name, password);
     }catch(e){
         if(e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-            res = null;
+            res = false;
         }else{
             console.error(e.code);
         }
@@ -47,13 +47,29 @@ function removeUser(db, id) {
 }
 function getUserByID(db, id){
     const findUserStmt = db.prepare('select * from user where id = ?');
-    const res = findUserStmt.all(id);
-    return res;
+    return findUserStmt.all(id);
 }
 function getUserByName(db, name){
     const findUserStmt = db.prepare('select * from user where name = ?');
-    const res = findUserStmt.all(name);
-    return res;
+    return findUserStmt.all(name);
+}
+function changeUserName(db, id, name){
+    const changeNameStmt = db.prepare(`
+        update user 
+        set name = ?
+        where
+            id = ?
+        `);
+    return changeNameStmt.run(name, id);
+}
+function changeUserPassword(db, id, password){
+    const changePasswordStmt = db.prepare(`
+        update user 
+        set password = ?
+        where
+            id = ?
+        `);
+    return changePasswordStmt.run(password, id);
 }
 
 //STEP_LIST
