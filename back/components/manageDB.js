@@ -55,16 +55,6 @@ function getUserByName(db, name){
     const res = findUserStmt.all(name);
     return res;
 }
-function confirmUser(db, providedName){
-    const result = getUserByName(db, providedName);
-    let valid = false;
-
-    if(result.length > 0 && providedName === result[0].name){
-        valid = true
-    }
-
-    return valid;
-}
 
 //STEP_LIST
 
@@ -85,8 +75,6 @@ console.log(runRawSQL(db, '../sqlScripts/task_list_table.sql'));
 console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
 */
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
-console.log(confirmUser(db, 'test'));
-console.log(confirmUser(db, ' '));
 
 //console.log(removeUser(db, 3));
 //console.log(getUserByName(db, 'test'));
