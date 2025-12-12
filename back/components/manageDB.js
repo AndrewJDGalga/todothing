@@ -33,17 +33,13 @@ function addUser(db, {name, password}){
         const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
         res = addUserStmt.run(name, password);
     }catch(e){
-        console.log(Object.keys(e));
-        console.log(e.code);
         if(e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-            console.log('NOT UNIQUE!!!');
+            res = null;
+        }else{
+            console.error(e.code);
         }
     }
     return res;
-    /*
-    const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
-    return addUserStmt.run(name, password);
-    */
 }
 function removeUser(db, id) {
     const removeUserStmt = db.prepare('delete from user where id = ?');
