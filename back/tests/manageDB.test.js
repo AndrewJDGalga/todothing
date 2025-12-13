@@ -17,6 +17,6 @@ describe('Step Table Behavior', ()=>{
         assert.notStrictEqual(res, '');
     });
 
-    db.close();
+    //db.close();
 });
 

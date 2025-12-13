@@ -32,7 +32,10 @@ function runRawSQL(db, scriptFilePath) {
 function addUser(db, {name, password}){
     let res = '';
     try{
-        const addUserStmt = db.prepare('insert into user (name, password, creation, modification) values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+        const addUserStmt = db.prepare(`
+            insert into user (name, password, creation, modification) 
+                values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `);
         res = addUserStmt.run(name, password);
     }catch(e){
         if(e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
@@ -78,10 +81,14 @@ function changeUserPassword(db, id, password){
 function addStep(db, step){
     let res = '';
     try{
-        const addStepStmt = db.prepare('insert into step (step) values (?)');
+        const addStepStmt = db.prepare(`
+            insert into step_list (step)
+                values (?)
+        `);
         res = addStepStmt.run(step);
+        console.log('addStep: insert result:', res);
     }catch(e){
-        console.error(e.code);
+        console.error('addStep error:', e);
         res = false;
     }
     return res;
@@ -95,7 +102,7 @@ function addStep(db, step){
 
 
 //TEST
-const db = dbConnection();
+//const db = dbConnection();
 
 //console.log(runRawSQL(db, './sqlScripts/step_list_table.sql'));
 //console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
@@ -103,10 +110,10 @@ const db = dbConnection();
 //console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
 
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
-console.log(addStep(db, '30min'));
+//console.log(addStep(db, '30min'));
 //console.log(removeUser(db, 3));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByID(db, 1));
 
-db.close();
+//db.close();
