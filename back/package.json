@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./tests/",
+    "dev": "node ./components/manageDB.js",
     "resetDB" : "rm ./db/todo.db",
     "cleanTest" : "npm run resetDB && npm run test"
   },

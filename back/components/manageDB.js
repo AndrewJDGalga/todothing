@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 ////---------------TODODODODODODO replace all the error handling
 
-export { dbConnection, runRawSQL, addUser };
+export { dbConnection, runRawSQL, addUser, addStep };
 
 //DATABASE
 function dbConnection() {
@@ -75,7 +75,17 @@ function changeUserPassword(db, id, password){
 }
 
 //STEP_LIST
-
+function addStep(db, step){
+    let res = '';
+    try{
+        const addStepStmt = db.prepare('insert into step (step) values (?)');
+        res = addStepStmt.run(step);
+    }catch(e){
+        console.error(e.code);
+        res = false;
+    }
+    return res;
+}
 
 //TASK_LIST
 
@@ -85,18 +95,18 @@ function changeUserPassword(db, id, password){
 
 
 //TEST
-//const db = dbConnection();
-/*
-console.log(runRawSQL(db, '../sqlScripts/step_list_table.sql'));
-console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
-console.log(runRawSQL(db, '../sqlScripts/task_list_table.sql'));
-console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
-*/
+const db = dbConnection();
+
+//console.log(runRawSQL(db, './sqlScripts/step_list_table.sql'));
+//console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
+//console.log(runRawSQL(db, '../sqlScripts/task_list_table.sql'));
+//console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
+
 //console.log(addUser(db, {name: 'test', password: 't35t'}));
-//console.log
+console.log(addStep(db, '30min'));
 //console.log(removeUser(db, 3));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByName(db, 'test'));
 //console.log(getUserByID(db, 1));
 
-//db.close();
+db.close();
