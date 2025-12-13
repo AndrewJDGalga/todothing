@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, runRawSQL, addStep, getStepByID };
+export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID };
 
 //DATABASE--------------------------------------------------------
 /**
@@ -40,19 +40,39 @@ function runRawSQL(db, scriptFilePath) {
  * Retrieve table row by by ID.
  * @access private
  * @param {Database} db 
- * @param {string} table 
+ * @param {string} tableName 
  * @param {number} id 
  * @returns {(Array | string | boolean)}
  */
-function getRowByID(db, table, id){
+function getRowByID(db, tableName, id){
     let res = '';
     try {
-        const findUserStmt = db.prepare(`
-            select * from ${table} where id = ?
+        const getRowStmt = db.prepare(`
+            select * from ${tableName} where id = ?
         `);
-        res = findUserStmt.all(id);    
+        res = getRowStmt.all(id);    
     } catch (error) {
         console.error('getRowByID error:', e);
+        res = false;
+    }
+    return res;
+}
+/**
+ * 
+ * @param {Database} db 
+ * @param {string} tableName 
+ * @param {number} id 
+ * @returns {(Object | string | boolean)}
+ */
+function removeRowByID(db, tableName, id){
+    let res = '';
+    try {
+        const removeRowStmt = db.prepare(`
+            delete from ${tableName} where id = ?
+        `);
+        res = removeRowStmt.run(id);
+    }catch{
+        console.error('removeRowByID error:', e);
         res = false;
     }
     return res;
@@ -84,7 +104,10 @@ function addStep(db, step){
 function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
-
+//Wrapper for removeRowByID
+function removeStepByID(db, id){
+    return removeRowByID(db, 'step_list', id);
+}
 
 
 //USER TABLE--------------------------------------------------------
