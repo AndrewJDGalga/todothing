@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { addStep, dbConnection, runRawSQL } from '../components/manageDB.js';
+import { addStep, getStepByID, dbConnection, runRawSQL } from '../components/manageDB.js';
 
 describe('Database Behavior', ()=>{
     it('Connect to Database', ()=>{
@@ -13,6 +13,12 @@ describe('Step Table Behavior', ()=>{
 
     it('Add entry', ()=>{
         const res = addStep(db, '30min');
+        assert.notStrictEqual(res, false);
+        assert.notStrictEqual(res, '');
+    });
+
+    it('Get entry', ()=>{
+        const res = getStepByID(db, 1);
         assert.notStrictEqual(res, false);
         assert.notStrictEqual(res, '');
     });

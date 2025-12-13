@@ -3,8 +3,8 @@ import {readFile, readFileSync} from "node:fs";
 
 //I want to know when I last did something, getting distracted. --TODO remove
 console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
-
 ////---------------TODODODODODODO replace all the error handling
+
 
 export { dbConnection, runRawSQL, addStep, getStepByID };
 
@@ -58,6 +58,26 @@ function getRowByID(db, table, id){
     return res;
 }
 
+//STEP_LIST TABLE
+function addStep(db, step){
+    let res = '';
+    try{
+        const addStepStmt = db.prepare(`
+            insert into step_list (step)
+                values (?)
+        `);
+        res = addStepStmt.run(step);
+        console.log('addStep: insert result:', res);
+    }catch(e){
+        console.error('addStep error:', e);
+        res = false;
+    }
+    return res;
+}
+function getStepByID(db, id){
+    return getRowByID(db, 'step_list', id);
+}
+
 //USER
 function addUser(db, {name, password}){
     let res = '';
@@ -106,25 +126,7 @@ function changeUserPassword(db, id, password){
     return changePasswordStmt.run(password, id);
 }
 
-//STEP_LIST
-function addStep(db, step){
-    let res = '';
-    try{
-        const addStepStmt = db.prepare(`
-            insert into step_list (step)
-                values (?)
-        `);
-        res = addStepStmt.run(step);
-        console.log('addStep: insert result:', res);
-    }catch(e){
-        console.error('addStep error:', e);
-        res = false;
-    }
-    return res;
-}
-function getStepByID(db, id){
-    return getRowByID(db, 'step_list', id);
-}
+
 
 //TASK_LIST
 
