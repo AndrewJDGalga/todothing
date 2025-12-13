@@ -6,14 +6,18 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 ////---------------TODODODODODODO replace all the error handling
 
-export { dbConnection, runRawSQL, addUser, addStep };
+export { dbConnection, runRawSQL, addStep, getStepByID };
 
 //DATABASE
+/**
+ * Get connection to SQlite3 DB, and creates if not present.
+ * @access public
+ * @returns {(Database | null)}
+ */
 function dbConnection() {
     const location = './db/todo.db';
     let db = null;
     try {
-        //better-SQLite3 will create db file if not present
         db = new Database(location, {verbose: console.log});
         db.pragma('foreign_keys = on');
     }catch(e) {
@@ -22,10 +26,36 @@ function dbConnection() {
     }
     return db;
 }
-//intentionally unsafe
+/**
+ * UNSAFE - Run raw SQL from scripts
+ * @access public
+ * @param {Database} db 
+ * @param {string} scriptFilePath 
+ */
 function runRawSQL(db, scriptFilePath) {
     const rawCmd = readFileSync(scriptFilePath, 'utf8');
     db.exec(rawCmd);
+}
+/**
+ * Retrieve table row by by ID.
+ * @access private
+ * @param {Database} db 
+ * @param {string} table 
+ * @param {number} id 
+ * @returns {(string | string | boolean)}
+ */
+function getRowByID(db, table, id){
+    let res = '';
+    try {
+        const findUserStmt = db.prepare(`
+            select * from ${table} where id = ?
+        `);
+        res = findUserStmt.all(id);    
+    } catch (error) {
+        console.error('getRowByID error:', e);
+        res = false;
+    }
+    return res;
 }
 
 //USER
@@ -51,8 +81,7 @@ function removeUser(db, id) {
     return removeUserStmt.run(id);
 }
 function getUserByID(db, id){
-    const findUserStmt = db.prepare('select * from user where id = ?');
-    return findUserStmt.all(id);
+    return getRowByID(db, 'user', id);
 }
 function getUserByName(db, name){
     const findUserStmt = db.prepare('select * from user where name = ?');
@@ -92,6 +121,9 @@ function addStep(db, step){
         res = false;
     }
     return res;
+}
+function getStepByID(db, id){
+    return getRowByID(db, 'step_list', id);
 }
 
 //TASK_LIST
