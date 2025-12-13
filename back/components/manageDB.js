@@ -8,7 +8,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 export { dbConnection, runRawSQL, addStep, getStepByID };
 
-//DATABASE
+//DATABASE--------------------------------------------------------
 /**
  * Get connection to SQlite3 DB, and creates if not present.
  * @access public
@@ -42,7 +42,7 @@ function runRawSQL(db, scriptFilePath) {
  * @param {Database} db 
  * @param {string} table 
  * @param {number} id 
- * @returns {(string | string | boolean)}
+ * @returns {(Array | string | boolean)}
  */
 function getRowByID(db, table, id){
     let res = '';
@@ -58,7 +58,13 @@ function getRowByID(db, table, id){
     return res;
 }
 
-//STEP_LIST TABLE
+//STEP_LIST TABLE--------------------------------------------------------
+/**
+ * Add row to step_list
+ * @param {Database} db 
+ * @param {string} step 
+ * @returns {(Object | string | boolean)}
+ */
 function addStep(db, step){
     let res = '';
     try{
@@ -74,11 +80,14 @@ function addStep(db, step){
     }
     return res;
 }
+//Wrapper for getRowByID
 function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
 
-//USER
+
+
+//USER TABLE--------------------------------------------------------
 function addUser(db, {name, password}){
     let res = '';
     try{
