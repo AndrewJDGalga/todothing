@@ -51,7 +51,7 @@ function getRowByID(db, tableName, id){
             select * from ${tableName} where id = ?
         `);
         res = getRowStmt.all(id);    
-    } catch (error) {
+    } catch(e) {
         console.error('getRowByID error:', e);
     }
     return res;
@@ -71,8 +71,24 @@ function removeRowByID(db, tableName, id){
             delete from ${tableName} where id = ?
         `);
         res = removeRowStmt.run(id);
-    }catch{
+    }catch(e){
         console.error('removeRowByID error:', e);
+    }
+    return res;
+}
+
+function updateSingleByID(db, tablename, id, col, content){
+    let res = false;
+    try {
+        const updateOneStmt = db.prepare(`
+            update ${tablename}
+            set ${col} = ?
+            where
+                id = ?
+        `);
+        return updateOneStmt.run(content, id);
+    } catch (e) {
+        console.error('updateSingleByID:', e)
     }
     return res;
 }
@@ -103,6 +119,9 @@ function addStep(db, step){
 function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
+function updateStepByID(db, id, step){
+
+}
 //Wrapper for removeRowByID
 function removeStepByID(db, id){
     return removeRowByID(db, 'step_list', id);
@@ -111,7 +130,7 @@ function removeStepByID(db, id){
 
 //USER TABLE--------------------------------------------------------
 /**
- * 
+ * addUser to SQL DB.
  * @access public
  * @param {Database} db 
  * @param {string} name
@@ -141,10 +160,6 @@ function removeUser(db, id) {
 //wrapper for getUserByID
 function getUserByID(db, id){
     return getRowByID(db, 'user', id);
-}
-function getUserByName(db, name){
-    const findUserStmt = db.prepare('select * from user where name = ?');
-    return findUserStmt.all(name);
 }
 function changeUserName(db, id, name){
     const changeNameStmt = db.prepare(`

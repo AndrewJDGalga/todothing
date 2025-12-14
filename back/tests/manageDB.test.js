@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID, addUser } from '../components/manageDB.js';
+import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID, addUser } from '../components/vueTodoSQLDB.js';
 
 describe('Database Behavior', ()=>{
     it('Connect to Database', ()=>{
