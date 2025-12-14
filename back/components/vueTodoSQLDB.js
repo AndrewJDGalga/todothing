@@ -8,6 +8,8 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 
 export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID, updateStepByID, addUser };
 
+
+
 //DATABASE--------------------------------------------------------
 /**
  * Get connection to SQlite3 DB, and creates if not present.
@@ -27,7 +29,7 @@ function dbConnection() {
     return db;
 }
 /**
- * UNSAFE - Run raw SQL from scripts
+ * Particularly UNSAFE - Run raw SQL from scripts
  * @access public
  * @param {Database} db 
  * @param {string} scriptFilePath 
@@ -76,13 +78,22 @@ function removeRowByID(db, tableName, id){
     }
     return res;
 }
-
-function updateSingleByID(db, tablename, id, col, content){
+/**
+ * Update 1 cell (by column) in 1 row.
+ * @access private
+ * @param {Database} db 
+ * @param {string} tablename 
+ * @param {number} id 
+ * @param {string} colName 
+ * @param {any} content
+ * @returns {(Object | boolean)}
+ */
+function updateCellByID(db, tablename, id, colName, content){
     let res = false;
     try {
         const updateOneStmt = db.prepare(`
             update ${tablename}
-            set ${col} = ?
+            set ${colName} = ?
             where
                 id = ?
         `);
@@ -120,7 +131,7 @@ function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
 function updateStepByID(db, id, step){
-    updateSingleByID(db, 'step_list', id, 'step', step);
+    updateCellByID(db, 'step_list', id, 'step', step);
 }
 //Wrapper for removeRowByID
 function removeStepByID(db, id){
@@ -162,22 +173,10 @@ function getUserByID(db, id){
     return getRowByID(db, 'user', id);
 }
 function changeUserName(db, id, name){
-    const changeNameStmt = db.prepare(`
-        update user 
-        set name = ?
-        where
-            id = ?
-        `);
-    return changeNameStmt.run(name, id);
+    return updateCellByID(db, 'user', id, 'name', name);
 }
 function changeUserPassword(db, id, password){
-    const changePasswordStmt = db.prepare(`
-        update user 
-        set password = ?
-        where
-            id = ?
-        `);
-    return changePasswordStmt.run(password, id);
+    return updateCellByID(db, 'user', id, 'password', password);
 }
 
 
