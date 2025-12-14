@@ -37,12 +37,12 @@ function runRawSQL(db, scriptFilePath) {
     db.exec(rawCmd);
 }
 /**
- * Retrieve table row by by ID.
+ * Retrieve table row by by ID (doesn't apply to all)
  * @access private
  * @param {Database} db 
  * @param {string} tableName 
  * @param {number} id 
- * @returns {(Array | string | boolean)}
+ * @returns {(Array | boolean)}
  */
 function getRowByID(db, tableName, id){
     let res = false;
@@ -57,11 +57,12 @@ function getRowByID(db, tableName, id){
     return res;
 }
 /**
- * 
+ * Remove table row by ID (doesn't apply to all)
+ * @access private
  * @param {Database} db 
  * @param {string} tableName 
  * @param {number} id 
- * @returns {(Object | string | boolean)}
+ * @returns {(Object | boolean)}
  */
 function removeRowByID(db, tableName, id){
     let res = false;
@@ -79,9 +80,10 @@ function removeRowByID(db, tableName, id){
 //STEP_LIST TABLE--------------------------------------------------------
 /**
  * Add row to step_list
+ * @access public
  * @param {Database} db 
  * @param {string} step 
- * @returns {(Object | string | boolean)}
+ * @returns {(Object | boolean)}
  */
 function addStep(db, step){
     let res = false;
@@ -108,7 +110,15 @@ function removeStepByID(db, id){
 
 
 //USER TABLE--------------------------------------------------------
-function addUser(db, {name, password}){
+/**
+ * 
+ * @access public
+ * @param {Database} db 
+ * @param {string} name
+ * @param {string} password
+ * @returns {(Object | boolean | string)}
+ */
+function addUser(db, name, password){
     let res = false;
     try{
         const addUserStmt = db.prepare(`

@@ -33,11 +33,11 @@ describe('User Table Behavior', ()=>{
     runRawSQL(db, './sqlScripts/user_table.sql');
 
     it('Add user', ()=>{
-        const res = addUser(db, {name: 'test', password: 't35t'});
+        const res = addUser(db, 'test', 't35t');
         assert.notStrictEqual(res, false);
     });
     it('Add duplicate user name', ()=>{
-        const res = addUser(db, {name: 'test', password: 't35t'});
+        const res = addUser(db, 'test', 't35t');
         assert.strictEqual(res, 'duplicateName');
     });
 });
