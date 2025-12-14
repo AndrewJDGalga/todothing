@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID, addUser };
+export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID, updateStepByID, addUser };
 
 //DATABASE--------------------------------------------------------
 /**
@@ -120,7 +120,7 @@ function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
 function updateStepByID(db, id, step){
-
+    updateSingleByID(db, 'step_list', id, 'step', step);
 }
 //Wrapper for removeRowByID
 function removeStepByID(db, id){

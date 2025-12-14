@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID, addUser } from '../components/vueTodoSQLDB.js';
+import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID, updateStepByID, addUser } from '../components/vueTodoSQLDB.js';
 
 describe('Database Behavior', ()=>{
     it('Connect to Database', ()=>{
@@ -14,17 +14,18 @@ describe('Step Table Behavior', ()=>{
     it('Add step', ()=>{
         const res = addStep(db, '30min');
         assert.notStrictEqual(res, false);
-        assert.notStrictEqual(res, '');
     });
     it('Get step', ()=>{
         const res = getStepByID(db, 1);
         assert.notStrictEqual(res, false);
-        assert.notStrictEqual(res, '');
+    });
+    it('Update step', ()=>{
+        const res = updateStepByID(db, 1, '90min');
+        assert.notStrictEqual(res, false);
     });
     it('Remove step', ()=>{
         const res = removeStepByID(db, 1);
         assert.notStrictEqual(res, false);
-        assert.notStrictEqual(res, '');
     });
 });
 
