@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID } from '../components/manageDB.js';
+import { addStep, getStepByID, dbConnection, runRawSQL, removeStepByID, addUser } from '../components/manageDB.js';
 
 describe('Database Behavior', ()=>{
     it('Connect to Database', ()=>{
@@ -28,3 +28,16 @@ describe('Step Table Behavior', ()=>{
     });
 });
 
+describe('User Table Behavior', ()=>{
+    const db = dbConnection();
+    runRawSQL(db, './sqlScripts/user_table.sql');
+
+    it('Add user', ()=>{
+        const res = addUser(db, {name: 'test', password: 't35t'});
+        assert.notStrictEqual(res, false);
+    });
+    it('Add duplicate user name', ()=>{
+        const res = addUser(db, {name: 'test', password: 't35t'});
+        assert.strictEqual(res, 'duplicateName');
+    });
+});

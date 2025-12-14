@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID };
+export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID, addUser };
 
 //DATABASE--------------------------------------------------------
 /**
@@ -45,7 +45,7 @@ function runRawSQL(db, scriptFilePath) {
  * @returns {(Array | string | boolean)}
  */
 function getRowByID(db, tableName, id){
-    let res = '';
+    let res = false;
     try {
         const getRowStmt = db.prepare(`
             select * from ${tableName} where id = ?
@@ -53,7 +53,6 @@ function getRowByID(db, tableName, id){
         res = getRowStmt.all(id);    
     } catch (error) {
         console.error('getRowByID error:', e);
-        res = false;
     }
     return res;
 }
@@ -65,7 +64,7 @@ function getRowByID(db, tableName, id){
  * @returns {(Object | string | boolean)}
  */
 function removeRowByID(db, tableName, id){
-    let res = '';
+    let res = false;
     try {
         const removeRowStmt = db.prepare(`
             delete from ${tableName} where id = ?
@@ -73,7 +72,6 @@ function removeRowByID(db, tableName, id){
         res = removeRowStmt.run(id);
     }catch{
         console.error('removeRowByID error:', e);
-        res = false;
     }
     return res;
 }
@@ -86,7 +84,7 @@ function removeRowByID(db, tableName, id){
  * @returns {(Object | string | boolean)}
  */
 function addStep(db, step){
-    let res = '';
+    let res = false;
     try{
         const addStepStmt = db.prepare(`
             insert into step_list (step)
@@ -96,7 +94,6 @@ function addStep(db, step){
         console.log('addStep: insert result:', res);
     }catch(e){
         console.error('addStep error:', e);
-        res = false;
     }
     return res;
 }
@@ -112,7 +109,7 @@ function removeStepByID(db, id){
 
 //USER TABLE--------------------------------------------------------
 function addUser(db, {name, password}){
-    let res = '';
+    let res = false;
     try{
         const addUserStmt = db.prepare(`
             insert into user (name, password, creation, modification) 
@@ -121,17 +118,17 @@ function addUser(db, {name, password}){
         res = addUserStmt.run(name, password);
     }catch(e){
         if(e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-            res = false;
-        }else{
-            console.error(e.code);
+            console.error('addUser error:', e);
+            res = 'duplicateName';
         }
     }
     return res;
 }
+//wrapper for removeRowByID
 function removeUser(db, id) {
-    const removeUserStmt = db.prepare('delete from user where id = ?');
-    return removeUserStmt.run(id);
+    return removeRowByID(db, 'user', id);
 }
+//wrapper for getUserByID
 function getUserByID(db, id){
     return getRowByID(db, 'user', id);
 }
