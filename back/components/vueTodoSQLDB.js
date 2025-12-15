@@ -141,6 +141,11 @@ function removeStepByID(db, id){
 
 
 //USER TABLE--------------------------------------------------------
+function createUserTable(db){
+    runRawSQL(db, './sqlScripts/user_table.sql');
+    runRawSQL(db, './sqlScripts/user_triggers.sql');
+}
+
 /**
  * addUser to SQL DB.
  * @access public
