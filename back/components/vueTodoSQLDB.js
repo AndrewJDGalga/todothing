@@ -193,7 +193,7 @@ function addTask(db, name, dueDate, repeatWhen, location, notes){
                 values
                     (?,NULL,?,?,?,?, CURRENT_TIMESTAMP)
         `);
-        res = addTaskStmt.run(name, dueDate, repeatWhen, location, notes)
+        res = addTaskStmt.run(name, dueDate, repeatWhen, location, notes);
     } catch(e) {
         console.error('addStep error:', e);
     }
