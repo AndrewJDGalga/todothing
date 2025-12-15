@@ -1,7 +1,7 @@
 create table if not exists task_list (
     id              integer primary key autoincrement,
+    user_id         integer not null,
     name            text not null,
-    step_list_id    integer,
     due_date        datetime,
     repeat_when     integer,
     location        text,

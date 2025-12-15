@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser, changeUserName, getUserByID };
+export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser, removeUser, changeUserName, getUserByID };
 
 
 
@@ -199,6 +199,7 @@ function addTask(db, name, dueDate, repeatWhen, location, notes){
     let res = false;
     
     try {
+        
         const addTaskStmt = db.prepare(`
             insert into task_list (name, step_list_id, due_date, repeat_when, location, notes, created)
                 values
