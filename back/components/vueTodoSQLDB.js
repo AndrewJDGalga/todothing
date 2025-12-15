@@ -130,6 +130,7 @@ function addStep(db, step){
 function getStepByID(db, id){
     return getRowByID(db, 'step_list', id);
 }
+//Wrapper for updateCellByID
 function updateStepByID(db, id, step){
     updateCellByID(db, 'step_list', id, 'step', step);
 }
@@ -172,19 +173,35 @@ function removeUser(db, id) {
 function getUserByID(db, id){
     return getRowByID(db, 'user', id);
 }
+//Wrapper for updateCellByID
 function changeUserName(db, id, name){
     return updateCellByID(db, 'user', id, 'name', name);
 }
+//Wrapper for updateCellByID
 function changeUserPassword(db, id, password){
     return updateCellByID(db, 'user', id, 'password', password);
 }
 
 
+//TASK LIST TABLE--------------------------------------------------------
+function addTask(db, name, dueDate, repeatWhen, location, notes){
+    let res = false;
+    
+    try {
+        const addTaskStmt = db.prepare(`
+            insert into task_list (name, step_list_id, due_date, repeat_when, location, notes, created)
+                values
+                    (?,NULL,?,?,?,?, CURRENT_TIMESTAMP)
+        `);
+        res = addTaskStmt.run(name, dueDate, repeatWhen, location, notes)
+    } catch(e) {
+        console.error('addStep error:', e);
+    }
+    return res;
+}
 
-//TASK_LIST
 
-
-//USER_TASK_LIST
+//USER TASK LIST TABLE--------------------------------------------------------
 
 
 
