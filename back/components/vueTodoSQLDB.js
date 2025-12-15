@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, runRawSQL, addStep, getStepByID, removeStepByID, updateStepByID, addUser };
+export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser };
 
 
 
@@ -30,7 +30,7 @@ function dbConnection() {
 }
 /**
  * Particularly UNSAFE - Run raw SQL from scripts
- * @access public
+ * @access private
  * @param {Database} db 
  * @param {string} scriptFilePath 
  */
@@ -105,6 +105,11 @@ function updateCellByID(db, tablename, id, colName, content){
 }
 
 //STEP_LIST TABLE--------------------------------------------------------
+
+function createStepListTable(db){
+    runRawSQL(db, './sqlScripts/step_list_table.sql');
+}
+
 /**
  * Add row to step_list
  * @access public
@@ -141,6 +146,7 @@ function removeStepByID(db, id){
 
 
 //USER TABLE--------------------------------------------------------
+
 function createUserTable(db){
     runRawSQL(db, './sqlScripts/user_table.sql');
     runRawSQL(db, './sqlScripts/user_triggers.sql');
