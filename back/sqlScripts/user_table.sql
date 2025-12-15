@@ -3,6 +3,6 @@ create table if not exists user (
     name            text not null,
     password        text not null,
     creation        datetime not null,
-    modification    datetime not null,
+    modification    text not null,
     unique(name)
 );

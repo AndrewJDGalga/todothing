@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser };
+export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser, changeUserName, getUserByID };
 
 
 
@@ -165,7 +165,7 @@ function addUser(db, name, password){
     try{
         const addUserStmt = db.prepare(`
             insert into user (name, password, creation, modification) 
-                values (?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                values (?,?, CURRENT_TIMESTAMP, strftime('%Y-%m-%d %H:%M:%f', 'now'))
         `);
         res = addUserStmt.run(name, password);
     }catch(e){

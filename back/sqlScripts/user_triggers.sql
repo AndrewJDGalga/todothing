@@ -3,6 +3,6 @@ after update on user
 when old.name <> new.name OR old.password <> new.password
 begin
     update user
-    set modification = CURRENT_TIMESTAMP
+    set modification = strftime('%Y-%m-%d %H:%M:%f', 'now')
     where id = old.id;
 end;
