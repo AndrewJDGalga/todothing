@@ -46,10 +46,10 @@ describe('User Table and Tracking', ()=>{
         const res = addUser(db, 'test', 't35t');
         assert.strictEqual(res, 'duplicateName');
     });
-    /*
-    it('Three created', ()=>{
-        const res1 = addUser(db, 'test1', 't35t');
-        const res2 = addUser(db, 'test1', 't35t');
-    })
-        */
+    it('Change username and record', ()=>{
+
+    });
+    if('Change password and record', ()=>{
+
+    });
 });

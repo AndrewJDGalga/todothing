@@ -11,10 +11,19 @@ create trigger users_modified_after
 after update on users
 for each row
 begin
-    insert into modified(iso_date) 
-        values(strftime('%Y-%m-%d %H:%M:%f', 'now'));
-    insert into users_modified(users_id, modified_id) 
-        values(new.id, last_insert_rowid());
+    if new.name <> old.name then
+        insert into modified(iso_date, changed) 
+            values(strftime('%Y-%m-%d %H:%M:%f', 'now'), 'name');
+        insert into users_modified(users_id, modified_id) 
+            values(new.id, last_insert_rowid());
+    end if;
+
+    if new.password <> old.password then
+        insert into modified(iso_date, changed) 
+            values(strftime('%Y-%m-%d %H:%M:%f', 'now'), 'password');
+        insert into users_modified(users_id, modified_id) 
+            values(new.id, last_insert_rowid());
+    end if;
 end;
 
 create trigger users_deleted_before
