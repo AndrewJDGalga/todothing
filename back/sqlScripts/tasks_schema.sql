@@ -1,13 +1,8 @@
-create table if not exists task_list (
+create table if not exists tasks (
     id              integer primary key autoincrement,
-    user_id         integer not null,
     name            text not null,
     due_date        datetime,
-    repeat_when     integer,
+    repeat_freq     integer,
     location        text,
-    notes           text,
-    created         datetime,
-    foreign key (step_list_id) references step_list (id) 
-        on update cascade 
-        on delete cascade 
+    notes           text
 );
