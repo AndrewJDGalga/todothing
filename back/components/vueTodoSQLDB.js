@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, getUserByID };
+export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, getUserByID, getUserCreationByID };
 
 
 
@@ -250,6 +250,22 @@ function createUsersCreatedTable(db){
     runRawSQL(db, './sql/schema/users_created_schema.sql');
 }
 
+function getUserCreationByID(db, id){
+    let res = false;
+    try{
+        const getCreationStmt = db.prepare(`
+            select u.users_id, c.iso_date
+                from users_created u
+            join created c on u.created_id = c.id
+            where u.users_id = ?;
+        `);
+        res = getCreationStmt.run(id);
+    }catch(e){
+        console.error('getUserCreationByID error:', e);
+    }
+    return res;
+}
+
 
 //USERS MODIFIED TABLE--------------------------------------------------------
 /**
@@ -260,6 +276,7 @@ function createUsersModifiedTable(db){
     runRawSQL(db, './sql/schema/users_modified_schema.sql');
 }
 
+
 //USERS DELETED TABLE--------------------------------------------------------
 /**
  * Operations to create usersDeleted table
@@ -268,6 +285,7 @@ function createUsersModifiedTable(db){
 function createUsersDeletedTable(db){
     runRawSQL(db, './sql/schema/users_deleted_schema.sql');
 }
+
 
 //TRIGGERS--------------------------------------------------------
 /**
