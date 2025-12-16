@@ -1,7 +1,7 @@
 create trigger users_created
 after insert on users
 begin
-
+    insert into created
 end; 
 
 create trigger users_modified
