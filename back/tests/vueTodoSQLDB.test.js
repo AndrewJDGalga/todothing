@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser, changeUserName, getUserByID } from '../components/vueTodoSQLDB.js';
+import { dbConnection, createStepsTable, addStep, getStepByID, removeStepByID, updateStepByID, createUsersTable, addUser, changeUserName, getUserByID } from '../components/vueTodoSQLDB.js';
 
 describe('Database Behavior', ()=>{
     it('Connect to Database', ()=>{
@@ -9,7 +9,7 @@ describe('Database Behavior', ()=>{
 
 describe('Step Table Behavior', ()=>{
     const db = dbConnection();
-    createStepListTable(db);
+    createStepsTable(db);
 
     it('Add step', ()=>{
         const res = addStep(db, '30min');
@@ -31,7 +31,7 @@ describe('Step Table Behavior', ()=>{
 
 describe('User Table Behavior', ()=>{
     const db = dbConnection();
-    createUserTable(db);
+    createUsersTable(db);
 
     it('Add user', ()=>{
         const res = addUser(db, 'test', 't35t');

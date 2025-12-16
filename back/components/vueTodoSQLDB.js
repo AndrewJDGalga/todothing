@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, createStepListTable, addStep, getStepByID, removeStepByID, updateStepByID, createUserTable, addUser, removeUser, changeUserName, getUserByID };
+export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, getUserByID };
 
 
 
@@ -28,6 +28,19 @@ function dbConnection() {
     }
     return db;
 }
+
+/**
+ * Convience method to get everything setup without mistakes.
+ */
+function dbInit() {
+    const db = dbConnection();
+    createStepsTable(db);
+    createCreatedTable(db);
+    createModifiedTable(db);
+    createDeletedTable(db);
+    createUsersTable(db);
+}
+
 /**
  * Particularly UNSAFE - Run raw SQL from scripts
  * @access private
@@ -104,12 +117,43 @@ function updateCellByID(db, tablename, id, colName, content){
     return res;
 }
 
-//STEPS TABLE--------------------------------------------------------
 
-function createStepListTable(db){
-    runRawSQL(db, './sql/schema/steps_schema.sql');
+//CREATED TABLE--------------------------------------------------------
+/**
+ * Operations to create created table
+ * @param {Database} db 
+ */
+function createCreatedTable(db){
+    runRawSQL(db, './sql/schema/created_schema.sql');
 }
 
+//MODIFIED TABLE--------------------------------------------------------
+/**
+ * Operations to create modified table
+ * @param {Database} db 
+ */
+function createModifiedTable(db){
+    runRawSQL(db, './sql/schema/modified_schema.sql');
+}
+
+//DELETED TABLE--------------------------------------------------------
+/**
+ * Operations to create deleted table
+ * @param {Database} db 
+ */
+function createDeletedTable(db){
+    runRawSQL(db, './sql/schema/deleted_schema.sql');
+}
+
+
+//STEPS TABLE--------------------------------------------------------
+/**
+ * Operations to create Steps table
+ * @param {Database} db 
+ */
+function createStepsTable(db){
+    runRawSQL(db, './sql/schema/steps_schema.sql');
+}
 /**
  * Add row to steps
  * @access public
@@ -144,14 +188,15 @@ function removeStepByID(db, id){
     return removeRowByID(db, 'steps', id);
 }
 
-
 //USERS TABLE--------------------------------------------------------
-
-function createUserTable(db){
+/**
+ * Operations to create users table
+ * @param {Database} db 
+ */
+function createUsersTable(db){
     runRawSQL(db, './sql/schema/users_schema.sql');
     runRawSQL(db, './sql/users_triggers.sql');
 }
-
 /**
  * addUser to SQL DB.
  * @access public
