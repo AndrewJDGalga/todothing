@@ -107,7 +107,7 @@ function updateCellByID(db, tablename, id, colName, content){
 //STEP_LIST TABLE--------------------------------------------------------
 
 function createStepListTable(db){
-    runRawSQL(db, './sqlScripts/step_list_table.sql');
+    runRawSQL(db, './sql/schema/steps_schema.sql');
 }
 
 /**
@@ -148,8 +148,8 @@ function removeStepByID(db, id){
 //USER TABLE--------------------------------------------------------
 
 function createUserTable(db){
-    runRawSQL(db, './sqlScripts/user_table.sql');
-    runRawSQL(db, './sqlScripts/user_triggers.sql');
+    runRawSQL(db, './sql/schema/users_schema.sql');
+    runRawSQL(db, './sql/users_triggers.sql');
 }
 
 /**
