@@ -10,7 +10,7 @@ export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepB
 
 
 
-//DATABASE--------------------------------------------------------
+//DATABASE COMMON--------------------------------------------------------
 /**
  * Get connection to SQlite3 DB, and creates if not present.
  * @access public
@@ -23,12 +23,11 @@ function dbConnection() {
         db = new Database(location, {verbose: console.log});
         db.pragma('foreign_keys = on');
     }catch(e) {
-        console.log(e);
+        console.error(e);
         process.exit(1);
     }
     return db;
 }
-
 /**
  * Convience method to get everything setup without mistakes.
  */
@@ -39,8 +38,11 @@ function dbInit() {
     createModifiedTable(db);
     createDeletedTable(db);
     createUsersTable(db);
+    createUsersCreatedTable(db);
+    createUsersModifiedTable(db);
+    createUsersDeletedTable(db);
+    createUsersTriggers(db);
 }
-
 /**
  * Particularly UNSAFE - Run raw SQL from scripts
  * @access private
@@ -169,7 +171,6 @@ function addStep(db, step){
                 values (?)
         `);
         res = addStepStmt.run(step);
-        console.log('addStep: insert result:', res);
     }catch(e){
         console.error('addStep error:', e);
     }
@@ -188,6 +189,7 @@ function removeStepByID(db, id){
     return removeRowByID(db, 'steps', id);
 }
 
+
 //USERS TABLE--------------------------------------------------------
 /**
  * Operations to create users table
@@ -195,7 +197,7 @@ function removeStepByID(db, id){
  */
 function createUsersTable(db){
     runRawSQL(db, './sql/schema/users_schema.sql');
-    runRawSQL(db, './sql/users_triggers.sql');
+
 }
 /**
  * addUser to SQL DB.
@@ -209,15 +211,15 @@ function addUser(db, name, password){
     let res = false;
     try{
         const addUserStmt = db.prepare(`
-            insert into users (name, password, creation, modification) 
-                values (?,?, CURRENT_TIMESTAMP, strftime('%Y-%m-%d %H:%M:%f', 'now'))
+            insert into users (name, password) 
+                values (?,?)
         `);
         res = addUserStmt.run(name, password);
     }catch(e){
         if(e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-            console.error('addUser error:', e);
             res = 'duplicateName';
         }
+        console.error('addUser error:', e);
     }
     return res;
 }
@@ -238,3 +240,45 @@ function changeUserPassword(db, id, password){
     return updateCellByID(db, 'users', id, 'password', password);
 }
 
+
+//USERS CREATED TABLE--------------------------------------------------------
+/**
+ * Operations to create usersCreated table
+ * @param {Database} db 
+ */
+function createUsersCreatedTable(db){
+    runRawSQL(db, './sql/schema/users_created_schema.sql');
+}
+
+
+//USERS MODIFIED TABLE--------------------------------------------------------
+/**
+ * Operations to create usersModified table
+ * @param {Database} db 
+ */
+function createUsersModifiedTable(db){
+    runRawSQL(db, './sql/schema/users_modified_schema.sql');
+}
+
+//USERS DELETED TABLE--------------------------------------------------------
+/**
+ * Operations to create usersDeleted table
+ * @param {Database} db 
+ */
+function createUsersDeletedTable(db){
+    runRawSQL(db, './sql/schema/users_deleted_schema.sql');
+}
+
+//TRIGGERS--------------------------------------------------------
+/**
+ * Operations to create users triggers. Run after tables.
+ * @param {Database} db 
+ */
+function createUsersTriggers(db){
+    runRawSQL(db, './sql/users_triggers.sql');
+}
+
+dbInit();
+const db = dbConnection();
+const res = addUser(db, 'test', 't35t');
+console.log(res);
