@@ -104,14 +104,14 @@ function updateCellByID(db, tablename, id, colName, content){
     return res;
 }
 
-//STEP_LIST TABLE--------------------------------------------------------
+//STEPS TABLE--------------------------------------------------------
 
 function createStepListTable(db){
     runRawSQL(db, './sql/schema/steps_schema.sql');
 }
 
 /**
- * Add row to step_list
+ * Add row to steps
  * @access public
  * @param {Database} db 
  * @param {string} step 
@@ -121,7 +121,7 @@ function addStep(db, step){
     let res = false;
     try{
         const addStepStmt = db.prepare(`
-            insert into step_list (step)
+            insert into steps (step)
                 values (?)
         `);
         res = addStepStmt.run(step);
@@ -133,19 +133,19 @@ function addStep(db, step){
 }
 //Wrapper for getRowByID
 function getStepByID(db, id){
-    return getRowByID(db, 'step_list', id);
+    return getRowByID(db, 'steps', id);
 }
 //Wrapper for updateCellByID
 function updateStepByID(db, id, step){
-    updateCellByID(db, 'step_list', id, 'step', step);
+    updateCellByID(db, 'steps', id, 'step', step);
 }
 //Wrapper for removeRowByID
 function removeStepByID(db, id){
-    return removeRowByID(db, 'step_list', id);
+    return removeRowByID(db, 'steps', id);
 }
 
 
-//USER TABLE--------------------------------------------------------
+//USERS TABLE--------------------------------------------------------
 
 function createUserTable(db){
     runRawSQL(db, './sql/schema/users_schema.sql');
@@ -164,7 +164,7 @@ function addUser(db, name, password){
     let res = false;
     try{
         const addUserStmt = db.prepare(`
-            insert into user (name, password, creation, modification) 
+            insert into users (name, password, creation, modification) 
                 values (?,?, CURRENT_TIMESTAMP, strftime('%Y-%m-%d %H:%M:%f', 'now'))
         `);
         res = addUserStmt.run(name, password);
@@ -178,58 +178,18 @@ function addUser(db, name, password){
 }
 //wrapper for removeRowByID
 function removeUser(db, id) {
-    return removeRowByID(db, 'user', id);
+    return removeRowByID(db, 'users', id);
 }
 //wrapper for getUserByID
 function getUserByID(db, id){
-    return getRowByID(db, 'user', id);
+    return getRowByID(db, 'users', id);
 }
 //Wrapper for updateCellByID
 function changeUserName(db, id, name){
-    return updateCellByID(db, 'user', id, 'name', name);
+    return updateCellByID(db, 'users', id, 'name', name);
 }
 //Wrapper for updateCellByID
 function changeUserPassword(db, id, password){
-    return updateCellByID(db, 'user', id, 'password', password);
+    return updateCellByID(db, 'users', id, 'password', password);
 }
 
-
-//TASK LIST TABLE--------------------------------------------------------
-function addTask(db, name, dueDate, repeatWhen, location, notes){
-    let res = false;
-    
-    try {
-        
-        const addTaskStmt = db.prepare(`
-            insert into task_list (name, step_list_id, due_date, repeat_when, location, notes, created)
-                values
-                    (?,NULL,?,?,?,?, CURRENT_TIMESTAMP)
-        `);
-        res = addTaskStmt.run(name, dueDate, repeatWhen, location, notes);
-    } catch(e) {
-        console.error('addStep error:', e);
-    }
-    return res;
-}
-
-
-//USER TASK LIST TABLE--------------------------------------------------------
-
-
-
-//TEST
-//const db = dbConnection();
-
-//console.log(runRawSQL(db, './sqlScripts/step_list_table.sql'));
-//console.log(runRawSQL(db, '../sqlScripts/user_table.sql'));
-//console.log(runRawSQL(db, '../sqlScripts/task_list_table.sql'));
-//console.log(runRawSQL(db, '../sqlScripts/user_task_list_table.sql'));
-
-//console.log(addUser(db, {name: 'test', password: 't35t'}));
-//console.log(addStep(db, '30min'));
-//console.log(removeUser(db, 3));
-//console.log(getUserByName(db, 'test'));
-//console.log(getUserByName(db, 'test'));
-//console.log(getUserByID(db, 1));
-
-//db.close();
