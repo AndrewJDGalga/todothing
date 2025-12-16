@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, getUserByID } from '../components/vueTodoSQLDB.js';
+import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, getUserByID, getUserCreationByID } from '../components/vueTodoSQLDB.js';
 
 console.log('dbInit');
 dbInit();
@@ -37,7 +37,10 @@ describe('User Table and Tracking', ()=>{
     it('Add user', ()=>{
         const res = addUser(db, 'test', 't35t');
         assert.notStrictEqual(res, false);
-        
+    });
+    it('Add user recorded', ()=>{
+        const res = getUserCreationByID(db, 1);
+        assert.notStrictEqual(res, false);
     });
     it('Add duplicate user name', ()=>{
         const res = addUser(db, 'test', 't35t');
