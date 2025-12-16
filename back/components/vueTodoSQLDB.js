@@ -277,8 +277,3 @@ function createUsersDeletedTable(db){
 function createUsersTriggers(db){
     runRawSQL(db, './sql/users_triggers.sql');
 }
-
-dbInit();
-const db = dbConnection();
-const res = addUser(db, 'test', 't35t');
-console.log(res);
