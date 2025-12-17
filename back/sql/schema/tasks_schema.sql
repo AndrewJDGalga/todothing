@@ -4,5 +4,6 @@ create table if not exists tasks (
     due_date        datetime,
     repeat_freq     integer,
     location        text,
-    notes           text
+    notes           text,
+    isComplete      integer not null default 0 --treat as bool, 0 = false
 );

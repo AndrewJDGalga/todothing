@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID };
+export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addTask };
 
 
 
@@ -345,6 +345,20 @@ function getAllDeleted(db){
  */
 function createTasksTable(db){
     runRawSQL(db, './sql/schema/tasks_schema.sql');
+}
+
+function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes=null){
+    let res = false;
+    try{
+        const addTaskStmt = db.prepare(`
+            insert into tasks (name, due_date, repeat_freq, location, notes) 
+                values (?,?,?,?,?)
+        `);
+        res = addTaskStmt.run(name, due_date, repeat_freq, location, notes);
+    }catch(e){
+        console.error('addTask error:', e);
+    }
+    return res;
 }
 
 

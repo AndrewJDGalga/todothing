@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, removeUser, getAllDeleted, getUserCreationByID, getUserModificationsByID } from '../components/vueTodoSQLDB.js';
+import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, removeUser, getAllDeleted, getUserCreationByID, getUserModificationsByID, addTask } from '../components/vueTodoSQLDB.js';
 
 console.log('dbInit');
 dbInit();
@@ -60,5 +60,14 @@ describe('User Table and Tracking', ()=>{
         removeUser(db,1);
         const removed = getAllDeleted(db);
         assert.notStrictEqual(removed, false);
+    });
+});
+
+describe('Tasks Table', ()=>{
+    const db = dbConnection();
+    
+    it('Add task', ()=>{
+        const res = addTask(db, 'test');
+        assert.notStrictEqual(res, false);
     });
 });
