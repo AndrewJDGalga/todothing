@@ -49,11 +49,11 @@ describe('User Table and Tracking', ()=>{
     it('Change username and record', ()=>{
         const res = changeUserName(db, 1, "charlie");
         const change = getUserModificationsByID(db, 1);
-        assert.strictEqual(change[0], 'name');
+        assert.strictEqual(change[0].changed, 'name');
     });
     if('Change password and record', ()=>{
         const res = changeUserPassword(db, 1, "test22!");
         const change = getUserModificationsByID(db, 1);
-        assert.strictEqual(change[1], 'password');
+        assert.strictEqual(change[1].changed, 'password');
     });
 });
