@@ -233,7 +233,7 @@ function addUser(db, name, password){
 function removeUser(db, id) {
     return removeRowByID(db, 'users', id);
 }
-//wrapper for getUserByID
+//wrapper for getRowByID
 function getUserByID(db, id){
     return getRowByID(db, 'users', id);
 }
@@ -347,6 +347,16 @@ function createTasksTable(db){
     runRawSQL(db, './sql/schema/tasks_schema.sql');
 }
 
+/**
+ * Expects ISO 8601 date
+ * @param {Database} db 
+ * @param {string} name 
+ * @param {string} due_date 
+ * @param {number} repeat_freq 
+ * @param {string} location 
+ * @param {string} notes 
+ * @returns 
+ */
 function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes=null){
     let res = false;
     try{
@@ -359,6 +369,47 @@ function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes
         console.error('addTask error:', e);
     }
     return res;
+}
+
+//wrapper for removeRowByID
+function removeTask(db, id) {
+    return removeRowByID(db, 'tasks', id);
+}
+//wrapper for getRowByID
+function getTaskByID(db, id){
+    return getRowByID(db, 'tasks', id);
+}
+//Wrapper for updateCellByID
+function changeTaskName(db, id, name){
+    return updateCellByID(db, 'tasks', id, 'name', name);
+}
+//Wrapper for updateCellByID
+function changeTaskDueDate(db, id, dueDate){
+    return updateCellByID(db, 'tasks', id, 'due_date', dueDate);
+}
+//Wrapper for updateCellByID
+function changeTaskRepeatFreq(db, id, repeatFreq){
+    return updateCellByID(db, 'tasks', id, 'repeat_freq', repeatFreq);
+}
+//Wrapper for updateCellByID
+function changeTaskLocation(db, id, location){
+    return updateCellByID(db, 'tasks', id, 'location', location);
+}
+//Wrapper for updateCellByID
+function changeTaskNotes(db, id, notes){
+    return updateCellByID(db, 'tasks', id, 'notes', notes);
+}
+/**
+ * Complexity: isComplete is bool, but SQLite doesn't have this type. Must guard.
+ * @param {Database} db 
+ * @param {number} id 
+ * @param {number} isComplete 
+ * @returns {(Object | boolean)}
+ */
+function changeTaskIsComplete(db, id, isComplete){
+    if(typeof isComplete === 'boolean') isComplete = (isComplete === false) ? 0 : 1;
+    else if((isComplete !== 0) || (isComplete !== 1)) isComplete == 0;
+    return updateCellByID(db, 'tasks', id, 'password', isComplete);
 }
 
 
