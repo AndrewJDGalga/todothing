@@ -51,7 +51,7 @@ describe('User Table and Tracking', ()=>{
         const change = getUserModificationsByID(db, 1);
         assert.strictEqual(change[0].changed, 'name');
     });
-    if('Change password and record', ()=>{
+    it('Change password and record', ()=>{
         const res = changeUserPassword(db, 1, "test22!");
         const change = getUserModificationsByID(db, 1);
         assert.strictEqual(change[1].changed, 'password');
