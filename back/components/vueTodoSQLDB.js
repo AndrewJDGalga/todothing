@@ -68,6 +68,7 @@ function runRawSQL(db, scriptFilePath) {
  */
 function getRowByID(db, tableName, id){
     let res = false;
+    id = forcePosInt(id);
     try {
         const getRowStmt = db.prepare(`
             select * from ${tableName} where id = ?
@@ -88,6 +89,7 @@ function getRowByID(db, tableName, id){
  */
 function removeRowByID(db, tableName, id){
     let res = false;
+    id = forcePosInt(id);
     try {
         const removeRowStmt = db.prepare(`
             delete from ${tableName} where id = ?
@@ -110,6 +112,7 @@ function removeRowByID(db, tableName, id){
  */
 function updateCellByID(db, tablename, id, colName, content){
     let res = false;
+    id = forcePosInt(id);
     try {
         const updateOneStmt = db.prepare(`
             update ${tablename}
@@ -281,6 +284,7 @@ function createUsersCreatedTable(db){
  */
 function getUserCreationByID(db, id){
     let res = false;
+    id = forcePosInt(id);
     try{
         const getCreationStmt = db.prepare(`
             select u.users_id, c.iso_date
@@ -312,6 +316,7 @@ function createUsersModifiedTable(db){
  */
 function getUserModificationsByID(db, id){
     let res = false;
+    id = forcePosInt(id);
     try{
         const getModificationStmt = db.prepare(`
             select u.users_id, m.iso_date, m.changed
@@ -421,7 +426,7 @@ function changeTaskDueDate(db, id, dueDate){
  * @returns {(Object | boolean)}
  */
 function changeTaskRepeatFreq(db, id, repeatFreq){
-    
+    repeatFreq = forcePosInt(repeatFreq);
     return updateCellByID(db, 'tasks', id, 'repeat_freq', repeatFreq);
 }
 //Wrapper for updateCellByID
