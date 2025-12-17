@@ -66,8 +66,12 @@ describe('User Table and Tracking', ()=>{
 describe('Tasks Table', ()=>{
     const db = dbConnection();
     
-    it('Add task', ()=>{
+    it('Add task empty', ()=>{
         const res = addTask(db, 'test');
+        assert.notStrictEqual(res, false);
+    });
+    it('Add task filled', ()=>{ //TODO
+        const res = addTask(db, 'test', '');
         assert.notStrictEqual(res, false);
     });
 });

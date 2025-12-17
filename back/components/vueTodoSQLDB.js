@@ -124,6 +124,11 @@ function updateCellByID(db, tablename, id, colName, content){
     return res;
 }
 
+function isISO8601Date(someString){
+    const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/;
+    return re.test(someString);
+}
+
 
 //CREATED TABLE--------------------------------------------------------
 /**
@@ -384,8 +389,16 @@ function getTaskByID(db, id){
 function changeTaskName(db, id, name){
     return updateCellByID(db, 'tasks', id, 'name', name);
 }
-//Wrapper for updateCellByID
+
+/**
+ * Expects isISO8601Date format
+ * @param {Database} db 
+ * @param {number} id 
+ * @param {string} dueDate 
+ * @returns {(Object | boolean)}
+ */
 function changeTaskDueDate(db, id, dueDate){
+    if(!isISO8601Date(dueDate)) return false; //short circut, bad practice?
     return updateCellByID(db, 'tasks', id, 'due_date', dueDate);
 }
 //Wrapper for updateCellByID
@@ -404,7 +417,7 @@ function changeTaskNotes(db, id, notes){
  * Complexity: isComplete is bool, but SQLite doesn't have this type. Must guard.
  * @param {Database} db 
  * @param {number} id 
- * @param {number} isComplete 
+ * @param {(number | boolean)} isComplete 
  * @returns {(Object | boolean)}
  */
 function changeTaskIsComplete(db, id, isComplete){
