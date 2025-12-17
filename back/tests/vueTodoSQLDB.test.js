@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, getUserByID, getUserCreationByID, getUserModificationsByID } from '../components/vueTodoSQLDB.js';
+import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, removeUser, getAllDeleted, getUserCreationByID, getUserModificationsByID } from '../components/vueTodoSQLDB.js';
 
 console.log('dbInit');
 dbInit();
@@ -57,6 +57,8 @@ describe('User Table and Tracking', ()=>{
         assert.strictEqual(change[1].changed, 'password');
     });
     it('Deleted user accounts', ()=>{
-
+        removeUser(db,1);
+        const removed = getAllDeleted(db);
+        assert.notStrictEqual(removed, false);
     });
 });

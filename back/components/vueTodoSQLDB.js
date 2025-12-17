@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getUserCreationByID, getUserModificationsByID };
+export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID };
 
 
 
@@ -317,14 +317,14 @@ function createUsersDeletedTable(db){
 function getAllDeleted(db){
     let res = false;
     try{
-        const getModificationStmt = db.prepare(`
+        const getDeletedStmt = db.prepare(`
             select u.users_id, d.iso_date, d.note
                 from users_deleted u
-            join deleted d on u.deleted_id = d.id;
+            inner join deleted d on u.deleted_id = d.id;
         `);
-        res = getModificationStmt.all(id);
+        res = getDeletedStmt.all();
     }catch(e){
-        console.error('getUserModificationsByID error:', e);
+        console.error('getAllDeleted error:', e);
     }
     return res;
 }
@@ -338,3 +338,10 @@ function getAllDeleted(db){
 function createUsersTriggers(db){
     runRawSQL(db, './sql/users_triggers.sql');
 }
+
+//dbInit();
+const db = dbConnection();
+//addUser(db, 'test', 't35t');
+//removeUser(db,1);
+const removed = getAllDeleted(db);
+console.log(removed);
