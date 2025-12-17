@@ -123,12 +123,24 @@ function updateCellByID(db, tablename, id, colName, content){
     }
     return res;
 }
-
+/**
+ * Confirm if string fits date formatting.
+ * @param {string} someString 
+ * @returns {boolean}
+ */
 function isISO8601Date(someString){
     const re = /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z/;
     return re.test(someString);
 }
-
+/**
+ * Ensure number is 0+ int
+ * @param {number} someNum 
+ * @returns {number}
+ */
+function forcePosInt(someNum){
+    if(someNum < 0) someNum = 0;
+    return Math.round(someNum);
+}
 
 //CREATED TABLE--------------------------------------------------------
 /**
@@ -366,6 +378,8 @@ function createTasksTable(db){
 function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes=null){
     let res = false;
     try{
+        if(!isISO8601Date(due_date)) throw new Error('Expected string date in ISO 8601 format.');
+
         const addTaskStmt = db.prepare(`
             insert into tasks (name, due_date, repeat_freq, location, notes) 
                 values (?,?,?,?,?)
@@ -376,7 +390,6 @@ function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes
     }
     return res;
 }
-
 //wrapper for removeRowByID
 function removeTask(db, id) {
     return removeRowByID(db, 'tasks', id);
@@ -389,9 +402,8 @@ function getTaskByID(db, id){
 function changeTaskName(db, id, name){
     return updateCellByID(db, 'tasks', id, 'name', name);
 }
-
 /**
- * Expects isISO8601Date format
+ * Expects isISO8601Date format.
  * @param {Database} db 
  * @param {number} id 
  * @param {string} dueDate 
@@ -401,8 +413,15 @@ function changeTaskDueDate(db, id, dueDate){
     if(!isISO8601Date(dueDate)) return false; //short circut, bad practice?
     return updateCellByID(db, 'tasks', id, 'due_date', dueDate);
 }
-//Wrapper for updateCellByID
+/**
+ * Repeat frequency cannot be < 0 or decimal.
+ * @param {Database} db 
+ * @param {number} id 
+ * @param {number} repeatFreq 
+ * @returns {(Object | boolean)}
+ */
 function changeTaskRepeatFreq(db, id, repeatFreq){
+    
     return updateCellByID(db, 'tasks', id, 'repeat_freq', repeatFreq);
 }
 //Wrapper for updateCellByID
@@ -455,7 +474,10 @@ function createUsersTasksTable(db){
 function createUsersTriggers(db){
     runRawSQL(db, './sql/users_triggers.sql');
 }
-
+/**
+ * Init tasks table triggers, run after tables created.
+ * @param {Database} db 
+ */
 function createTasksTriggers(db){
     runRawSQL(db, './sql/tasks_triggers.sql');
 }
