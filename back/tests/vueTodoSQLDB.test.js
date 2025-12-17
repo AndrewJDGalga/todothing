@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, getUserByID, getUserCreationByID } from '../components/vueTodoSQLDB.js';
+import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, getUserByID, getUserCreationByID, getUserModificationsByID } from '../components/vueTodoSQLDB.js';
 
 console.log('dbInit');
 dbInit();
@@ -47,9 +47,13 @@ describe('User Table and Tracking', ()=>{
         assert.strictEqual(res, 'duplicateName');
     });
     it('Change username and record', ()=>{
-
+        const res = changeUserName(db, 1, "charlie");
+        const change = getUserModificationsByID(db, 1);
+        assert.strictEqual(change[0], 'name');
     });
     if('Change password and record', ()=>{
-
+        const res = changeUserPassword(db, 1, "test22!");
+        const change = getUserModificationsByID(db, 1);
+        assert.strictEqual(change[1], 'password');
     });
 });

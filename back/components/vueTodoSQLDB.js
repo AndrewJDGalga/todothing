@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, getUserByID, getUserCreationByID };
+export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getUserCreationByID, getUserModificationsByID };
 
 
 
@@ -249,7 +249,12 @@ function changeUserPassword(db, id, password){
 function createUsersCreatedTable(db){
     runRawSQL(db, './sql/schema/users_created_schema.sql');
 }
-
+/**
+ * Get user account creation date by ID
+ * @param {Database} db 
+ * @param {number} id 
+ * @returns {(Object | boolean)}
+ */
 function getUserCreationByID(db, id){
     let res = false;
     try{
@@ -276,6 +281,21 @@ function createUsersModifiedTable(db){
     runRawSQL(db, './sql/schema/users_modified_schema.sql');
 }
 
+function getUserModificationsByID(db, id){
+    let res = false;
+    try{
+        const getModificationStmt = db.prepare(`
+            select u.users_id, m.iso_date, m.changed
+                from users_modified u
+            join modified m on u.modified_id = m.id
+            where u.users_id = ?;
+        `);
+        res = getModificationStmt.all(id);
+    }catch(e){
+        console.error('getUserModificationsByID error:', e);
+    }
+    return res;
+}
 
 //USERS DELETED TABLE--------------------------------------------------------
 /**
