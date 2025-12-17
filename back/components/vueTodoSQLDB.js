@@ -129,6 +129,7 @@ function createCreatedTable(db){
     runRawSQL(db, './sql/schema/created_schema.sql');
 }
 
+
 //MODIFIED TABLE--------------------------------------------------------
 /**
  * Operations to create modified table
@@ -137,6 +138,7 @@ function createCreatedTable(db){
 function createModifiedTable(db){
     runRawSQL(db, './sql/schema/modified_schema.sql');
 }
+
 
 //DELETED TABLE--------------------------------------------------------
 /**
@@ -280,7 +282,12 @@ function getUserCreationByID(db, id){
 function createUsersModifiedTable(db){
     runRawSQL(db, './sql/schema/users_modified_schema.sql');
 }
-
+/**
+ * Get all modifications for 1 user
+ * @param {Database} db 
+ * @param {number} id 
+ * @returns {(Array | boolean)}
+ */
 function getUserModificationsByID(db, id){
     let res = false;
     try{
@@ -297,6 +304,7 @@ function getUserModificationsByID(db, id){
     return res;
 }
 
+
 //USERS DELETED TABLE--------------------------------------------------------
 /**
  * Operations to create usersDeleted table
@@ -304,6 +312,21 @@ function getUserModificationsByID(db, id){
  */
 function createUsersDeletedTable(db){
     runRawSQL(db, './sql/schema/users_deleted_schema.sql');
+}
+
+function getAllDeleted(db){
+    let res = false;
+    try{
+        const getModificationStmt = db.prepare(`
+            select u.users_id, d.iso_date, d.note
+                from users_deleted u
+            join deleted d on u.deleted_id = d.id;
+        `);
+        res = getModificationStmt.all(id);
+    }catch(e){
+        console.error('getUserModificationsByID error:', e);
+    }
+    return res;
 }
 
 

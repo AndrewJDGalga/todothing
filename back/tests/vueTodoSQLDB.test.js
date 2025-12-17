@@ -47,13 +47,16 @@ describe('User Table and Tracking', ()=>{
         assert.strictEqual(res, 'duplicateName');
     });
     it('Change username and record', ()=>{
-        const res = changeUserName(db, 1, "charlie");
+        changeUserName(db, 1, "charlie");
         const change = getUserModificationsByID(db, 1);
         assert.strictEqual(change[0].changed, 'name');
     });
     it('Change password and record', ()=>{
-        const res = changeUserPassword(db, 1, "test22!");
+        changeUserPassword(db, 1, "test22!");
         const change = getUserModificationsByID(db, 1);
         assert.strictEqual(change[1].changed, 'password');
+    });
+    it('Deleted user accounts', ()=>{
+
     });
 });
