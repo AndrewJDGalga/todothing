@@ -42,6 +42,10 @@ function dbInit() {
     createUsersModifiedTable(db);
     createUsersDeletedTable(db);
     createUsersTriggers(db);
+    createTasksTable(db);
+    createTasksStepsTable(db);
+    createUsersTasksTable(db);
+    db.close();
 }
 /**
  * Particularly UNSAFE - Run raw SQL from scripts
@@ -313,7 +317,11 @@ function getUserModificationsByID(db, id){
 function createUsersDeletedTable(db){
     runRawSQL(db, './sql/schema/users_deleted_schema.sql');
 }
-
+/**
+ * Get all references to deleted accounts
+ * @param {Database} db 
+ * @returns {(Array | boolean)}
+ */
 function getAllDeleted(db){
     let res = false;
     try{
@@ -330,6 +338,36 @@ function getAllDeleted(db){
 }
 
 
+//TASKS TABLE--------------------------------------------------------
+/**
+ * Operations to create tasks table
+ * @param {Database} db 
+ */
+function createTasksTable(db){
+    runRawSQL(db, './sql/schema/tasks_schema.sql');
+}
+
+
+//TASKS_STEPS TABLE--------------------------------------------------------
+/**
+ * Operations to create tasksSteps table
+ * @param {Database} db 
+ */
+function createTasksStepsTable(db){
+    runRawSQL(db, './sql/schema/tasks_steps_schema.sql');
+}
+
+
+//USERS_TASKS TABLE--------------------------------------------------------
+/**
+ * Operations to create usersTasks table
+ * @param {Database} db 
+ */
+function createUsersTasksTable(db){
+    runRawSQL(db, './sql/schema/users_tasks_schema.sql');
+}
+
+
 //TRIGGERS--------------------------------------------------------
 /**
  * Operations to create users triggers. Run after tables.
@@ -339,9 +377,3 @@ function createUsersTriggers(db){
     runRawSQL(db, './sql/users_triggers.sql');
 }
 
-//dbInit();
-const db = dbConnection();
-//addUser(db, 'test', 't35t');
-//removeUser(db,1);
-const removed = getAllDeleted(db);
-console.log(removed);
