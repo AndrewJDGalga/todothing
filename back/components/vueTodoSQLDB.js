@@ -45,6 +45,7 @@ function dbInit() {
     createTasksTable(db);
     createTasksStepsTable(db);
     createUsersTasksTable(db);
+    createTasksTriggers(db);
     db.close();
 }
 /**
@@ -442,3 +443,6 @@ function createUsersTriggers(db){
     runRawSQL(db, './sql/users_triggers.sql');
 }
 
+function createTasksTriggers(db){
+    runRawSQL(db, './sql/tasks_triggers.sql');
+}
