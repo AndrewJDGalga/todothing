@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addTask };
+export { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, createUserTask, addStep, addTask };
 
 
 
@@ -383,7 +383,7 @@ function createTasksTable(db){
 function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes=null){
     let res = false;
     try{
-        if(!isISO8601Date(due_date)) throw new Error('Expected string date in ISO 8601 format.');
+        if(due_date !== null && !isISO8601Date(due_date)) throw new Error('Expected string date in ISO 8601 format.');
 
         const addTaskStmt = db.prepare(`
             insert into tasks (name, due_date, repeat_freq, location, notes) 
