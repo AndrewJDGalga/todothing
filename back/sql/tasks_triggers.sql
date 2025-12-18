@@ -7,3 +7,4 @@ begin
             raise (abort, 'isComplete must be fake bool: 1 OR 0.')
     end;
 end;
+

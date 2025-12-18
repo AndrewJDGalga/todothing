@@ -470,6 +470,28 @@ function createUsersTasksTable(db){
     runRawSQL(db, './sql/schema/users_tasks_schema.sql');
 }
 
+function createUserTask(db, userID, name, due_date=null, repeat_freq=null, location=null, notes=null){
+    let res = false;
+    const taskInsertStmt = db.prepare(`
+        insert into tasks (name, due_date, repeat_freq, location, notes)
+            values(?,?,?,?,?)
+    `);
+    const userTaskInsertStmt = db.prepare(`
+        insert into users_tasks (users_id, tasks_id)
+            values(?,?)
+    `);
+    const userTaskTransaction = db.transaction((userID, name, due_date, repeat_freq, location, notes)=>{
+        const taskResult = taskInsertStmt.run(name, due_date, repeat_freq, location, notes);
+        const newTaskID = taskResult.lastInsertRowid;
+        return userTaskInsertStmt.run(userID, newTaskID);
+    });
+    try {
+        res = userTaskTransaction(userID, name, due_date, repeat_freq, location, notes);
+    }catch(e){
+        console.error('createUserTask error:', e);
+    }
+    return res;
+}
 
 //TRIGGERS--------------------------------------------------------
 /**
