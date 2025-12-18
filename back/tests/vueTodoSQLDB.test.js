@@ -79,7 +79,7 @@ describe('Tasks Table', ()=>{
 describe('User Tasks Table', ()=>{
     const db = dbConnection();
 
-    it('Create user task', ()=>{
+    it('Add user task', ()=>{
         const userRes = addUser(db, 'userTask', 't35t');
         const userTaskRes = addUserTask(db, userRes.lastInsertRowid, 'complete task test');
         assert.notStrictEqual(userTaskRes, false);

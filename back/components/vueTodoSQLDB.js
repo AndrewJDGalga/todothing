@@ -148,6 +148,7 @@ function forcePosInt(someNum){
 //CREATED TABLE--------------------------------------------------------
 /**
  * Operations to create created table
+ * @access private
  * @param {Database} db 
  */
 function createCreatedTable(db){
@@ -158,6 +159,7 @@ function createCreatedTable(db){
 //MODIFIED TABLE--------------------------------------------------------
 /**
  * Operations to create modified table
+ * @access private
  * @param {Database} db 
  */
 function createModifiedTable(db){
@@ -168,6 +170,7 @@ function createModifiedTable(db){
 //DELETED TABLE--------------------------------------------------------
 /**
  * Operations to create deleted table
+ * @access private
  * @param {Database} db 
  */
 function createDeletedTable(db){
@@ -178,6 +181,7 @@ function createDeletedTable(db){
 //STEPS TABLE--------------------------------------------------------
 /**
  * Operations to create Steps table
+ * @access private
  * @param {Database} db 
  */
 function createStepsTable(db){
@@ -220,6 +224,7 @@ function removeStepByID(db, id){
 //USERS TABLE--------------------------------------------------------
 /**
  * Operations to create users table
+ * @access private
  * @param {Database} db 
  */
 function createUsersTable(db){
@@ -271,6 +276,7 @@ function changeUserPassword(db, id, password){
 //USERS CREATED TABLE--------------------------------------------------------
 /**
  * Operations to create usersCreated table
+ * @access private
  * @param {Database} db 
  */
 function createUsersCreatedTable(db){
@@ -278,6 +284,7 @@ function createUsersCreatedTable(db){
 }
 /**
  * Get user account creation date by ID
+ * @access public
  * @param {Database} db 
  * @param {number} id 
  * @returns {(Object | boolean)}
@@ -303,6 +310,7 @@ function getUserCreationByID(db, id){
 //USERS MODIFIED TABLE--------------------------------------------------------
 /**
  * Operations to create usersModified table
+ * @access private
  * @param {Database} db 
  */
 function createUsersModifiedTable(db){
@@ -310,6 +318,7 @@ function createUsersModifiedTable(db){
 }
 /**
  * Get all modifications for 1 user
+ * @access public
  * @param {Database} db 
  * @param {number} id 
  * @returns {(Array | boolean)}
@@ -335,6 +344,7 @@ function getUserModificationsByID(db, id){
 //USERS DELETED TABLE--------------------------------------------------------
 /**
  * Operations to create usersDeleted table
+ * @access private
  * @param {Database} db 
  */
 function createUsersDeletedTable(db){
@@ -342,6 +352,7 @@ function createUsersDeletedTable(db){
 }
 /**
  * Get all references to deleted accounts
+ * @access public
  * @param {Database} db 
  * @returns {(Array | boolean)}
  */
@@ -364,14 +375,15 @@ function getAllDeleted(db){
 //TASKS TABLE--------------------------------------------------------
 /**
  * Operations to create tasks table
+ * @access private
  * @param {Database} db 
  */
 function createTasksTable(db){
     runRawSQL(db, './sql/schema/tasks_schema.sql');
 }
-
 /**
  * Expects ISO 8601 date
+ * @access public
  * @param {Database} db 
  * @param {string} name 
  * @param {string} due_date 
@@ -409,6 +421,7 @@ function changeTaskName(db, id, name){
 }
 /**
  * Expects isISO8601Date format.
+ * @access private
  * @param {Database} db 
  * @param {number} id 
  * @param {string} dueDate 
@@ -420,6 +433,7 @@ function changeTaskDueDate(db, id, dueDate){
 }
 /**
  * Repeat frequency cannot be < 0 or decimal.
+ * @access public
  * @param {Database} db 
  * @param {number} id 
  * @param {number} repeatFreq 
@@ -439,6 +453,7 @@ function changeTaskNotes(db, id, notes){
 }
 /**
  * Complexity: isComplete is bool, but SQLite doesn't have this type. Must guard.
+ * @access public
  * @param {Database} db 
  * @param {number} id 
  * @param {(number | boolean)} isComplete 
@@ -454,6 +469,7 @@ function changeTaskIsComplete(db, id, isComplete){
 //TASKS_STEPS TABLE--------------------------------------------------------
 /**
  * Operations to create tasksSteps table
+ * @access private
  * @param {Database} db 
  */
 function createTasksStepsTable(db){
@@ -464,14 +480,28 @@ function createTasksStepsTable(db){
 //USERS_TASKS TABLE--------------------------------------------------------
 /**
  * Operations to create usersTasks table
+ * @access private
  * @param {Database} db 
  */
 function createUsersTasksTable(db){
     runRawSQL(db, './sql/schema/users_tasks_schema.sql');
 }
-
+/**
+ * Tasks should be tied to user. JS-approach over pure SQL for simplier transaction (imo).
+ * @access public
+ * @param {Database} db 
+ * @param {number} userID 
+ * @param {string} name 
+ * @param {string} due_date 
+ * @param {number} repeat_freq 
+ * @param {string} location 
+ * @param {string} notes 
+ * @returns {(Object | boolean)}
+ */
 function addUserTask(db, userID, name, due_date=null, repeat_freq=null, location=null, notes=null){
     let res = false;
+    userID = forcePosInt(userID);
+    repeat_freq = forcePosInt(repeat_freq);
     const taskInsertStmt = db.prepare(`
         insert into tasks (name, due_date, repeat_freq, location, notes)
             values(?,?,?,?,?)
@@ -493,9 +523,11 @@ function addUserTask(db, userID, name, due_date=null, repeat_freq=null, location
     return res;
 }
 
+
 //TRIGGERS--------------------------------------------------------
 /**
  * Operations to create users triggers. Run after tables.
+ * @access private
  * @param {Database} db 
  */
 function createUsersTriggers(db){
@@ -503,6 +535,7 @@ function createUsersTriggers(db){
 }
 /**
  * Init tasks table triggers, run after tables created.
+ * @access private
  * @param {Database} db 
  */
 function createTasksTriggers(db){
