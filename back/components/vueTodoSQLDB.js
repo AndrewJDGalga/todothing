@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addUserTask, addStep, addTask, addTaskStep };
+export { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addUserTask, addTaskStep, removeTask, getTaskByID, changeTaskName, changeTaskDueDate, changeTaskRepeatFreq, changeTaskLocation, changeTaskNotes, changeTaskIsComplete };
 
 
 
@@ -187,28 +187,6 @@ function createDeletedTable(db){
 function createStepsTable(db){
     runRawSQL(db, './sql/schema/steps_schema.sql');
 }
-
-/**
- * Add row to steps
- * @access public
- * @param {Database} db 
- * @param {string} step 
- * @returns {(Object | boolean)}
- */
-function addStep(db, step){
-    let res = false;
-    try{
-        const addStepStmt = db.prepare(`
-            insert into steps (step)
-                values (?)
-        `);
-        res = addStepStmt.run(step);
-    }catch(e){
-        console.error('addStep error:', e);
-    }
-    return res;
-}
-
 //Wrapper for getRowByID
 function getStepByID(db, id){
     return getRowByID(db, 'steps', id);
@@ -383,34 +361,6 @@ function getAllDeleted(db){
 function createTasksTable(db){
     runRawSQL(db, './sql/schema/tasks_schema.sql');
 }
-
-/**
- * Expects ISO 8601 date
- * @access public
- * @param {Database} db 
- * @param {string} name 
- * @param {string} due_date 
- * @param {number} repeat_freq 
- * @param {string} location 
- * @param {string} notes 
- * @returns 
- */
-function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes=null){
-    let res = false;
-    try{
-        if(due_date !== null && !isISO8601Date(due_date)) throw new Error('Expected string date in ISO 8601 format.');
-
-        const addTaskStmt = db.prepare(`
-            insert into tasks (name, due_date, repeat_freq, location, notes) 
-                values (?,?,?,?,?)
-        `);
-        res = addTaskStmt.run(name, due_date, repeat_freq, location, notes);
-    }catch(e){
-        console.error('addTask error:', e);
-    }
-    return res;
-}
-
 //wrapper for removeRowByID
 function removeTask(db, id) {
     return removeRowByID(db, 'tasks', id);

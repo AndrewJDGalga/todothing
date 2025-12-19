@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { dbConnection, dbInit, addStep, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, removeUser, getAllDeleted, getUserCreationByID, getUserModificationsByID, addTask, addUserTask, addTaskStep } from '../components/vueTodoSQLDB.js';
+import { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, changeUserName, changeUserPassword, removeUser, getAllDeleted, getUserCreationByID, getUserModificationsByID, addUserTask, addTaskStep } from '../components/vueTodoSQLDB.js';
 
 console.log('dbInit');
 dbInit();
@@ -65,12 +65,6 @@ describe('Tasks Steps Table', ()=>{
 describe('Step Table', ()=>{
     const db = dbConnection();
 
-    /*
-    it('Add step', ()=>{
-        const res = addStep(db, '30min');
-        assert.notStrictEqual(res, false);
-    });
-    */
     it('Get step', ()=>{
         const res = getStepByID(db, 1);
         assert.notStrictEqual(res, false);
@@ -85,18 +79,3 @@ describe('Step Table', ()=>{
     });
 });
 
-
-/*
-describe('Tasks Table', ()=>{
-    const db = dbConnection();
-
-    it('Add task empty', ()=>{
-        const res = addTask(db, 'test');
-        assert.notStrictEqual(res, false);
-    });
-    it('Add task filled', ()=>{
-        const res = addTask(db, 'test', '2025-12-18T00:14:32.090Z', 2, 'blerghville of blog', 'test');
-        assert.notStrictEqual(res, false);
-    });
-});
-*/
