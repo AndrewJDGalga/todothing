@@ -6,7 +6,7 @@ console.log("Timestamp: ", new Date(Date.now()).toLocaleTimeString());
 ////---------------TODODODODODODO replace all the error handling
 
 
-export { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addUserTask, addStep, addTask };
+export { dbConnection, dbInit, getStepByID, removeStepByID, updateStepByID, addUser, removeUser, changeUserName, changeUserPassword, getUserByID, getAllDeleted, getUserCreationByID, getUserModificationsByID, addUserTask, addStep, addTask, addTaskStep };
 
 
 
@@ -478,7 +478,8 @@ function createTasksStepsTable(db){
 
 function addTaskStep(db, taskID, stepName){
     let res = false;
-    userID = forcePosInt(userID);
+    taskID = forcePosInt(taskID);
+
     const stepInsertStmt = db.prepare(`
         insert into steps (step)
             values(?)
@@ -488,14 +489,15 @@ function addTaskStep(db, taskID, stepName){
             values(?,?)
     `);
     const taskStepTransaction = db.transaction((taskID, stepName)=>{
-        const taskResult = taskInsertStmt.run(stepName, due_date, repeat_freq, location, notes);
-        const newTaskID = taskResult.lastInsertRowid;
-        return userTaskInsertStmt.run(userID, newTaskID);
+        const stepResult = stepInsertStmt.run(stepName);
+        const newStepID = stepResult.lastInsertRowid;
+        return taskStepInsertStmt.run(taskID, newStepID);
     });
+
     try {
-        res = userTaskTransaction(userID, taskName, due_date, repeat_freq, location, notes);
+        res = taskStepTransaction(taskID, stepName);
     }catch(e){
-        console.error('createUserTask error:', e);
+        console.error('addTaskStep error:', e);
     }
     return res;
 }
@@ -522,10 +524,11 @@ function createUsersTasksTable(db){
  * @param {string} notes 
  * @returns {(Object | boolean)}
  */
-function addUserTask(db, userID, taskName, due_date=null, repeat_freq=null, location=null, notes=null){
+function addUserTask(db, userID, taskName, due_date=null, repeat_freq=0, location=null, notes=null){
     let res = false;
     userID = forcePosInt(userID);
     repeat_freq = forcePosInt(repeat_freq);
+
     const taskInsertStmt = db.prepare(`
         insert into tasks (name, due_date, repeat_freq, location, notes)
             values(?,?,?,?,?)
@@ -539,6 +542,7 @@ function addUserTask(db, userID, taskName, due_date=null, repeat_freq=null, loca
         const newTaskID = taskResult.lastInsertRowid;
         return userTaskInsertStmt.run(userID, newTaskID);
     });
+
     try {
         res = userTaskTransaction(userID, taskName, due_date, repeat_freq, location, notes);
     }catch(e){
