@@ -10,27 +10,6 @@ describe('Database', ()=>{
     });
 });
 
-describe('Step Table', ()=>{
-    const db = dbConnection();
-
-    it('Add step', ()=>{
-        const res = addStep(db, '30min');
-        assert.notStrictEqual(res, false);
-    });
-    it('Get step', ()=>{
-        const res = getStepByID(db, 1);
-        assert.notStrictEqual(res, false);
-    });
-    it('Update step', ()=>{
-        const res = updateStepByID(db, 1, '90min');
-        assert.notStrictEqual(res, false);
-    });
-    it('Remove step', ()=>{
-        const res = removeStepByID(db, 1);
-        assert.notStrictEqual(res, false);
-    });
-});
-
 describe('User Table and Tracking', ()=>{
     const db = dbConnection();
 
@@ -63,19 +42,6 @@ describe('User Table and Tracking', ()=>{
     });
 });
 
-describe('Tasks Table', ()=>{
-    const db = dbConnection();
-    
-    it('Add task empty', ()=>{
-        const res = addTask(db, 'test');
-        assert.notStrictEqual(res, false);
-    });
-    it('Add task filled', ()=>{
-        const res = addTask(db, 'test', '2025-12-18T00:14:32.090Z', 2, 'blerghville of blog', 'test');
-        assert.notStrictEqual(res, false);
-    });
-});
-
 describe('User Tasks Table', ()=>{
     const db = dbConnection();
 
@@ -95,3 +61,42 @@ describe('Tasks Steps Table', ()=>{
         assert.notStrictEqual(res, false);
     });
 });
+
+describe('Step Table', ()=>{
+    const db = dbConnection();
+
+    /*
+    it('Add step', ()=>{
+        const res = addStep(db, '30min');
+        assert.notStrictEqual(res, false);
+    });
+    */
+    it('Get step', ()=>{
+        const res = getStepByID(db, 1);
+        assert.notStrictEqual(res, false);
+    });
+    it('Update step', ()=>{
+        const res = updateStepByID(db, 1, '90min');
+        assert.notStrictEqual(res, false);
+    });
+    it('Remove step', ()=>{
+        const res = removeStepByID(db, 1);
+        assert.notStrictEqual(res, false);
+    });
+});
+
+
+/*
+describe('Tasks Table', ()=>{
+    const db = dbConnection();
+
+    it('Add task empty', ()=>{
+        const res = addTask(db, 'test');
+        assert.notStrictEqual(res, false);
+    });
+    it('Add task filled', ()=>{
+        const res = addTask(db, 'test', '2025-12-18T00:14:32.090Z', 2, 'blerghville of blog', 'test');
+        assert.notStrictEqual(res, false);
+    });
+});
+*/

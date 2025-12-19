@@ -29,7 +29,7 @@ function dbConnection() {
     return db;
 }
 /**
- * Convience method to get everything setup without mistakes.
+ * Convenience method to get everything setup without mistakes.
  */
 function dbInit() {
     const db = dbConnection();
@@ -187,6 +187,7 @@ function createDeletedTable(db){
 function createStepsTable(db){
     runRawSQL(db, './sql/schema/steps_schema.sql');
 }
+
 /**
  * Add row to steps
  * @access public
@@ -207,6 +208,7 @@ function addStep(db, step){
     }
     return res;
 }
+
 //Wrapper for getRowByID
 function getStepByID(db, id){
     return getRowByID(db, 'steps', id);
@@ -381,6 +383,7 @@ function getAllDeleted(db){
 function createTasksTable(db){
     runRawSQL(db, './sql/schema/tasks_schema.sql');
 }
+
 /**
  * Expects ISO 8601 date
  * @access public
@@ -407,6 +410,7 @@ function addTask(db, name, due_date=null, repeat_freq=null, location=null, notes
     }
     return res;
 }
+
 //wrapper for removeRowByID
 function removeTask(db, id) {
     return removeRowByID(db, 'tasks', id);
@@ -475,7 +479,13 @@ function changeTaskIsComplete(db, id, isComplete){
 function createTasksStepsTable(db){
     runRawSQL(db, './sql/schema/tasks_steps_schema.sql');
 }
-
+/**
+ * @access public
+ * @param {Database} db 
+ * @param {number} taskID 
+ * @param {string} stepName 
+ * @returns {(Object | boolean)}
+ */
 function addTaskStep(db, taskID, stepName){
     let res = false;
     taskID = forcePosInt(taskID);
