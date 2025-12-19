@@ -476,6 +476,30 @@ function createTasksStepsTable(db){
     runRawSQL(db, './sql/schema/tasks_steps_schema.sql');
 }
 
+function addTaskStep(db, taskID, stepName){
+    let res = false;
+    userID = forcePosInt(userID);
+    const stepInsertStmt = db.prepare(`
+        insert into steps (step)
+            values(?)
+    `);
+    const taskStepInsertStmt = db.prepare(`
+        insert into tasks_steps (tasks_id, steps_id)
+            values(?,?)
+    `);
+    const taskStepTransaction = db.transaction((taskID, stepName)=>{
+        const taskResult = taskInsertStmt.run(stepName, due_date, repeat_freq, location, notes);
+        const newTaskID = taskResult.lastInsertRowid;
+        return userTaskInsertStmt.run(userID, newTaskID);
+    });
+    try {
+        res = userTaskTransaction(userID, taskName, due_date, repeat_freq, location, notes);
+    }catch(e){
+        console.error('createUserTask error:', e);
+    }
+    return res;
+}
+
 
 //USERS_TASKS TABLE--------------------------------------------------------
 /**
@@ -498,7 +522,7 @@ function createUsersTasksTable(db){
  * @param {string} notes 
  * @returns {(Object | boolean)}
  */
-function addUserTask(db, userID, name, due_date=null, repeat_freq=null, location=null, notes=null){
+function addUserTask(db, userID, taskName, due_date=null, repeat_freq=null, location=null, notes=null){
     let res = false;
     userID = forcePosInt(userID);
     repeat_freq = forcePosInt(repeat_freq);
@@ -516,7 +540,7 @@ function addUserTask(db, userID, name, due_date=null, repeat_freq=null, location
         return userTaskInsertStmt.run(userID, newTaskID);
     });
     try {
-        res = userTaskTransaction(userID, name, due_date, repeat_freq, location, notes);
+        res = userTaskTransaction(userID, taskName, due_date, repeat_freq, location, notes);
     }catch(e){
         console.error('createUserTask error:', e);
     }
